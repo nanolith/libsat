@@ -31,7 +31,7 @@ include_directories(${CMAKE_BINARY_DIR}/include)
 ADD_LIBRARY(sat STATIC
     ${LIBSAT_SOURCES})
 TARGET_COMPILE_OPTIONS(
-    sat PRIVATE -fPIC -O2
+    sat PRIVATE -fPIC -O2 ${rcpr_CFLAGS}
     -Wall -Werror -Wextra -Wpedantic -Wno-unused-command-line-argument)
 
 ADD_LIBRARY(sat-${CMAKE_PROJECT_VERSION} SHARED
