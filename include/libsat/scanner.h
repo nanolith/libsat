@@ -29,6 +29,7 @@ struct LIBSAT_SYM(libsat_scanner)
     RCPR_SYM(resource) hdr;
     RCPR_SYM(allocator)* alloc;
     const char* input;
+    size_t index;
     size_t line;
     size_t col;
 };
