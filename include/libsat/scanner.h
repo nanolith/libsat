@@ -10,6 +10,7 @@
 #pragma once
 
 #include <libsat/function_decl.h>
+#include <rcpr/allocator.h>
 #include <rcpr/resource.h>
 #include <rcpr/resource/protected.h>
 
@@ -26,6 +27,7 @@ typedef struct LIBSAT_SYM(libsat_scanner) LIBSAT_SYM(libsat_scanner);
 struct LIBSAT_SYM(libsat_scanner)
 {
     RCPR_SYM(resource) hdr;
+    RCPR_SYM(allocator)* alloc;
     const char* input;
     size_t line;
     size_t col;
