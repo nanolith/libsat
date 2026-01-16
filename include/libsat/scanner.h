@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <libsat/function_decl.h>
 #include <rcpr/resource.h>
 #include <rcpr/resource/protected.h>
 
@@ -21,8 +22,8 @@ extern "C" {
  * \brief A scanner capable of generating tokens based on input strings for
  * creating propositional logic statements.
  */
-typedef struct libsat_scanner libsat_scanner;
-struct libsat_scanner
+typedef struct LIBSAT_SYM(libsat_scanner) LIBSAT_SYM(libsat_scanner);
+struct LIBSAT_SYM(libsat_scanner)
 {
     RCPR_SYM(resource) hdr;
     const char* input;
