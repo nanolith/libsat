@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <libsat/scanner.h>
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 extern "C" {
