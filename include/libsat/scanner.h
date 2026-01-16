@@ -20,6 +20,29 @@ extern "C" {
 # endif /*__cplusplus*/
 
 /**
+ * \brief Token details.
+ */
+typedef struct LIBSAT_SYM(libsat_scanner_token)
+LIBSAT_SYM(libsat_scanner_token);
+struct LIBSAT_SYM(libsat_scanner_token)
+{
+    int type;
+    size_t begin_index;
+    size_t end_index;
+    size_t begin_line;
+    size_t begin_col;
+    size_t end_line;
+    size_t end_col;
+    union
+    {
+        int istring;
+        uint64_t u64;
+        int64_t i64;
+        bool boolean;
+    } value;
+};
+
+/**
  * \brief A scanner capable of generating tokens based on input strings for
  * creating propositional logic statements.
  */
