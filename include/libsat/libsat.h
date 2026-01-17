@@ -47,6 +47,24 @@ bool
 LIBSAT_SYM(prop_context_valid)(
     const LIBSAT_SYM(libsat_context)* context);
 
+/******************************************************************************/
+/* Start of constructors.                                                     */
+/******************************************************************************/
+
+/**
+ * \brief Create a context instance.
+ *
+ * \param context       Pointer to the context pointer to be set to this created
+ *                      context instance on success.
+ * \param alloc         The allocator to use for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status LIBSAT_SYM(libsat_context_create)(
+    LIBSAT_SYM(libsat_context)** context, RCPR_SYM(allocator)* alloc);
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
