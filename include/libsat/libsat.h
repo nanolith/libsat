@@ -29,7 +29,7 @@ struct LIBSAT_SYM(libsat_context)
 {
     RCPR_SYM(resource) hdr;
     RCPR_SYM(allocator)* alloc;
-    RCPR_SYM(rbtree)* intern;
+    RCPR_SYM(rbtree)* string_to_intern;
     size_t variable_count;
 };
 
