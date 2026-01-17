@@ -92,6 +92,19 @@ LIBSAT_SYM(prop_scanner_valid)(
 status LIBSAT_SYM(libsat_scanner_create)(
     LIBSAT_SYM(libsat_scanner)** scanner, LIBSAT_SYM(libsat_context)* context);
 
+/******************************************************************************/
+/* Start of public exports.                                                   */
+/******************************************************************************/
+#define __INTERNAL_LIBSAT_IMPORT_scanner_sym(sym) \
+    LIBSAT_BEGIN_EXPORT \
+    typedef LIBSAT_SYM(libsat_scanner) sym ## libsat_scanner; \
+    LIBSAT_END_EXPORT \
+    REQUIRE_SEMICOLON_HERE
+#define LIBSAT_IMPORT_scanner_as(sym) \
+    __INTERNAL_LIBSAT_IMPORT_scanner_sym(sym ## _)
+#define LIBSAT_IMPORT_scanner \
+    __INTERNAL_LIBSAT_IMPORT_scanner_sym()
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
