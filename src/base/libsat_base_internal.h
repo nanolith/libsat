@@ -143,6 +143,10 @@ LIBSAT_SYM(string_to_intern_tree_key)(
         LIBSAT_SYM(intern_entry)** w, RCPR_SYM(allocator)* x, const char* y, \
         size_t z) { \
             return LIBSAT_SYM(intern_entry_create)(w,x,y,z); }  \
+    static inline status FN_DECL_MUST_CHECK \
+    sym ## intern_entry_resource_release( \
+        RCPR_SYM(resource)* x) { \
+            return LIBSAT_SYM(intern_entry_resource_release)(x); }  \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_base_internal_as(sym) \
