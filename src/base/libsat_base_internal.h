@@ -16,6 +16,19 @@
 extern "C" {
 # endif /*__cplusplus*/
 
+/**
+ * \brief Entry in the intern table.
+ */
+typedef struct LIBSAT_SYM(intern_entry) LIBSAT_SYM(intern_entry);
+struct LIBSAT_SYM(intern_entry)
+{
+    RCPR_SYM(resource) hdr;
+    RCPR_SYM(allocator)* alloc;
+    char* string;
+    size_t string_size;
+    size_t string_index;
+};
+
 /******************************************************************************/
 /* Start of private methods.                                                  */
 /******************************************************************************/
