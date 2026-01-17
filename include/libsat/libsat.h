@@ -84,7 +84,8 @@ LIBSAT_SYM(libsat_context_create)(
  *      - STATUS_SUCCESS on success.
  *      - a non-zero error code on failure.
  */
-status LIBSAT_SYM(libsat_context_variable_get)(
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_context_variable_get)(
     size_t* var_id, LIBSAT_SYM(libsat_context)* context, const char* var_name,
     bool create);
 
