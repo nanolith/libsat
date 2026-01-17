@@ -99,6 +99,9 @@ LIBSAT_SYM(libsat_scanner_create)(
 #define __INTERNAL_LIBSAT_IMPORT_scanner_sym(sym) \
     LIBSAT_BEGIN_EXPORT \
     typedef LIBSAT_SYM(libsat_scanner) sym ## libsat_scanner; \
+    static inline status FN_DECL_MUST_CHECK sym ## libsat_scanner_create( \
+        LIBSAT_SYM(libsat_scanner)** x, LIBSAT_SYM(libsat_context)* y) { \
+            return LIBSAT_SYM(libsat_scanner_create)(x,y); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_scanner_as(sym) \
