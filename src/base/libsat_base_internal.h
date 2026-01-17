@@ -86,7 +86,7 @@ LIBSAT_SYM(intern_entry_resource_release)(
  *      - RCPR_COMPARE_GT if \p lhs &gt; \p rhs.
  */
 RCPR_SYM(rcpr_comparison_result)
-LIBSAT_SYM(libsat_intern_tree_compare)(
+LIBSAT_SYM(intern_to_string_tree_compare)(
     void* context, const void* lhs, const void* rhs);
 
 /* C++ compatibility. */
