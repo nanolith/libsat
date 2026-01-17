@@ -10,7 +10,10 @@
 #pragma once
 
 #include <libsat/function_decl.h>
+#include <rcpr/allocator.h>
 #include <rcpr/compare.h>
+#include <rcpr/resource.h>
+#include <rcpr/resource/protected.h>
 
 /* C++ compatibility. */
 # ifdef   __cplusplus
