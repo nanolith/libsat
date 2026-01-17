@@ -89,7 +89,8 @@ LIBSAT_SYM(prop_scanner_valid)(
  *      - STATUS_SUCCESS on success.
  *      - a non-zero error code on failure.
  */
-status LIBSAT_SYM(libsat_scanner_create)(
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_scanner_create)(
     LIBSAT_SYM(libsat_scanner)** scanner, LIBSAT_SYM(libsat_context)* context);
 
 /******************************************************************************/
