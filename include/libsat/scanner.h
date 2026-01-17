@@ -74,6 +74,24 @@ bool
 LIBSAT_SYM(prop_scanner_valid)(
     const LIBSAT_SYM(libsat_scanner)* scanner);
 
+/******************************************************************************/
+/* Start of constructors.                                                     */
+/******************************************************************************/
+
+/**
+ * \brief Create a scanner instance.
+ *
+ * \param scanner       Pointer to the scanner pointer to be set to this created
+ *                      scanner instance on success.
+ * \param context       The context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status LIBSAT_SYM(libsat_scanner_create)(
+    LIBSAT_SYM(libsat_scanner)** scanner, LIBSAT_SYM(libsat_context)* context);
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
