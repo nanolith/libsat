@@ -14,6 +14,7 @@
 #include <rcpr/rbtree.h>
 #include <rcpr/resource.h>
 #include <rcpr/resource/protected.h>
+#include <stdbool.h>
 
 /* C++ compatibility. */
 # ifdef   __cplusplus
@@ -64,6 +65,27 @@ LIBSAT_SYM(prop_context_valid)(
  */
 status LIBSAT_SYM(libsat_context_create)(
     LIBSAT_SYM(libsat_context)** context, RCPR_SYM(allocator)* alloc);
+
+/******************************************************************************/
+/* Start of public methods.                                                   */
+/******************************************************************************/
+
+/**
+ * \brief Get or create a variable by name.
+ *
+ * \param var_id        Pointer to the variable id to be set on success.
+ * \param context       The context for this operation.
+ * \param var_name      The name of the variable.
+ * \param create        Set to true if the variable should be created if not
+ *                      found.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status LIBSAT_SYM(libsat_context_variable_get)(
+    size_t* var_id, LIBSAT_SYM(libsat_context)* context, const char* var_name,
+    bool create);
 
 /* C++ compatibility. */
 # ifdef   __cplusplus
