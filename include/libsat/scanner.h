@@ -10,6 +10,7 @@
 #pragma once
 
 #include <libsat/function_decl.h>
+#include <libsat/libsat_fwd.h>
 #include <rcpr/allocator.h>
 #include <rcpr/resource.h>
 #include <rcpr/resource/protected.h>
@@ -18,11 +19,6 @@
 # ifdef   __cplusplus
 extern "C" {
 # endif /*__cplusplus*/
-
-/**
- * \brief Forward declaration for context.
- */
-typedef struct LIBSAT_SYM(libsat_context) LIBSAT_SYM(libsat_context);
 
 /**
  * \brief Token details.
