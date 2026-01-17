@@ -56,6 +56,19 @@ LIBSAT_SYM(intern_entry_create)(
     LIBSAT_SYM(intern_entry)** entry, RCPR_SYM(allocator)* alloc,
     const char* str, size_t index);
 
+/**
+ * \brief Release an \ref intern_entry resource.
+ *
+ * \param r             The resource to release.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(intern_entry_resource_release)(
+    RCPR_SYM(resource)* r);
+
 /******************************************************************************/
 /* Start of private methods.                                                  */
 /******************************************************************************/
