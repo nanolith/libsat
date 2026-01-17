@@ -119,6 +119,19 @@ RCPR_SYM(rcpr_comparison_result)
 LIBSAT_SYM(string_to_intern_tree_compare)(
     void* context, const void* lhs, const void* rhs);
 
+/**
+ * \brief Given an \ref intern_entry resource handle, return its string
+ * key value.
+ *
+ * \param context       Unused.
+ * \param r             The resource handle of an \ref intern_entry.
+ *
+ * \returns the string key for this resource.
+ */
+const void*
+LIBSAT_SYM(string_to_intern_tree_key)(
+    void* context, const RCPR_SYM(resource)* r);
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
