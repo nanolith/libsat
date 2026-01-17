@@ -63,7 +63,8 @@ LIBSAT_SYM(prop_context_valid)(
  *      - STATUS_SUCCESS on success.
  *      - a non-zero error code on failure.
  */
-status LIBSAT_SYM(libsat_context_create)(
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_context_create)(
     LIBSAT_SYM(libsat_context)** context, RCPR_SYM(allocator)* alloc);
 
 /******************************************************************************/
