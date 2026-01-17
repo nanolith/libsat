@@ -59,6 +59,21 @@ struct LIBSAT_SYM(libsat_scanner)
     size_t col;
 };
 
+/******************************************************************************/
+/* Start of model checking properties.                                        */
+/******************************************************************************/
+
+/**
+ * \brief Valid scanner property.
+ *
+ * \param scanner       The scanner instance to be verified.
+ *
+ * \returns true if the scanner instance is valid.
+ */
+bool
+LIBSAT_SYM(prop_scanner_valid)(
+    const LIBSAT_SYM(libsat_scanner)* scanner);
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
