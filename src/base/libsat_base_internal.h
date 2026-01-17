@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <libsat/function_decl.h>
 #include <rcpr/compare.h>
 
 /* C++ compatibility. */
@@ -24,6 +25,7 @@ struct LIBSAT_SYM(intern_entry)
 {
     RCPR_SYM(resource) hdr;
     RCPR_SYM(allocator)* alloc;
+    int ref_count;
     char* string;
     size_t string_size;
     size_t string_index;
@@ -46,7 +48,7 @@ struct LIBSAT_SYM(intern_entry)
  *      - RCPR_COMPARE_GT if \p lhs &gt; \p rhs.
  */
 RCPR_SYM(rcpr_comparison_result)
-libsat_intern_tree_compare(
+LIBSAT_SYM(libsat_intern_tree_compare)(
     void* context, const void* lhs, const void* rhs);
 
 /* C++ compatibility. */
