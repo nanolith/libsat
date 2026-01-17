@@ -32,6 +32,21 @@ struct LIBSAT_SYM(libsat_context)
     size_t variable_count;
 };
 
+/******************************************************************************/
+/* Start of model checking properties.                                        */
+/******************************************************************************/
+
+/**
+ * \brief Valid context property.
+ *
+ * \param context       The context instance to be verified.
+ *
+ * \returns true if the context instance is valid.
+ */
+bool
+LIBSAT_SYM(prop_context_valid)(
+    const LIBSAT_SYM(libsat_context)* context);
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
