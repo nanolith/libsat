@@ -90,6 +90,19 @@ LIBSAT_SYM(intern_to_string_tree_compare)(
     void* context, const void* lhs, const void* rhs);
 
 /**
+ * \brief Given an \ref intern_entry resource handle, return its string_index
+ * key value.
+ *
+ * \param context       Unused.
+ * \param r             The resource handle of an \ref intern_entry.
+ *
+ * \returns the string_index key for this resource.
+ */
+const void*
+LIBSAT_SYM(intern_to_string_tree_key)(
+    void* context, const RCPR_SYM(resource)* r);
+
+/**
  * \brief Compare two opaque \ref intern_entry values for sorting in an
  * string-to-intern tree mapping.
  *
