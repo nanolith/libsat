@@ -159,6 +159,10 @@ LIBSAT_SYM(string_to_intern_tree_key)(
     sym ## string_to_intern_tree_compare( \
         void* x, const void* y, const void* z) { \
             return LIBSAT_SYM(string_to_intern_tree_compare)(x,y,z); } \
+    static inline const void* \
+    sym ## string_to_intern_tree_key( \
+        void* x, const RCPR_SYM(resource)* y) { \
+            return LIBSAT_SYM(string_to_intern_tree_key)(x,y); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_base_internal_as(sym) \
