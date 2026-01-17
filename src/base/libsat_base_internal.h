@@ -138,6 +138,11 @@ LIBSAT_SYM(string_to_intern_tree_key)(
 #define __INTERNAL_LIBSAT_IMPORT_base_internal_sym(sym) \
     LIBSAT_BEGIN_EXPORT \
     typedef LIBSAT_SYM(intern_entry) sym ## intern_entry; \
+    static inline status FN_DECL_MUST_CHECK \
+    sym ## intern_entry_create( \
+        LIBSAT_SYM(intern_entry)** w, RCPR_SYM(allocator)* x, const char* y, \
+        size_t z) { \
+            return LIBSAT_SYM(intern_entry_create)(w,x,y,z); }  \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_base_internal_as(sym) \
