@@ -32,6 +32,28 @@ struct LIBSAT_SYM(intern_entry)
 };
 
 /******************************************************************************/
+/* Start of constructors.                                                     */
+/******************************************************************************/
+
+/**
+ * \brief Create an \ref intern_entry.
+ *
+ * \param entry         Pointer to the \ref intern_entry pointer to set to this
+ *                      instance on success.
+ * \param alloc         The allocator to use for this operation.
+ * \param str           The string value for this entry.
+ * \param index         The interned string index for this entry.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(intern_entry_create)(
+    LIBSAT_SYM(intern_entry)** entry, RCPR_SYM(allocator)* alloc,
+    const char* str, size_t index);
+
+/******************************************************************************/
 /* Start of private methods.                                                  */
 /******************************************************************************/
 
