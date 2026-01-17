@@ -89,6 +89,19 @@ LIBSAT_SYM(libsat_context_variable_get)(
     size_t* var_id, LIBSAT_SYM(libsat_context)* context, const char* var_name,
     bool create);
 
+/******************************************************************************/
+/* Start of public exports.                                                   */
+/******************************************************************************/
+#define __INTERNAL_LIBSAT_IMPORT_base_sym(sym) \
+    LIBSAT_BEGIN_EXPORT \
+    typedef LIBSAT_SYM(libsat_context) sym ## libsat_context; \
+    LIBSAT_END_EXPORT \
+    REQUIRE_SEMICOLON_HERE
+#define LIBSAT_IMPORT_base_as(sym) \
+    __INTERNAL_LIBSAT_IMPORT_base_sym(sym ## _)
+#define LIBSAT_IMPORT_base \
+    __INTERNAL_LIBSAT_IMPORT_base_sym()
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
