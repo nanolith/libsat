@@ -132,6 +132,19 @@ const void*
 LIBSAT_SYM(string_to_intern_tree_key)(
     void* context, const RCPR_SYM(resource)* r);
 
+/******************************************************************************/
+/* Start of private exports.                                                  */
+/******************************************************************************/
+#define __INTERNAL_LIBSAT_IMPORT_base_internal_sym(sym) \
+    LIBSAT_BEGIN_EXPORT \
+    typedef LIBSAT_SYM(intern_entry) sym ## intern_entry; \
+    LIBSAT_END_EXPORT \
+    REQUIRE_SEMICOLON_HERE
+#define LIBSAT_IMPORT_base_internal_as(sym) \
+    __INTERNAL_LIBSAT_IMPORT_base_internal_sym(sym ## _)
+#define LIBSAT_IMPORT_base_internal \
+    __INTERNAL_LIBSAT_IMPORT_base_internal_sym()
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
