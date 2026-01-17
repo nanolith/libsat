@@ -36,7 +36,7 @@ struct LIBSAT_SYM(libsat_scanner_token)
     size_t end_col;
     union
     {
-        int istring;
+        size_t istring;
         uint64_t u64;
         int64_t i64;
         bool boolean;
