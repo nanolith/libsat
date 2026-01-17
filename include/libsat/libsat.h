@@ -95,6 +95,9 @@ LIBSAT_SYM(libsat_context_variable_get)(
 #define __INTERNAL_LIBSAT_IMPORT_base_sym(sym) \
     LIBSAT_BEGIN_EXPORT \
     typedef LIBSAT_SYM(libsat_context) sym ## libsat_context; \
+    static inline status FN_DECL_MUST_CHECK sym ## libsat_context_create( \
+        LIBSAT_SYM(libsat_context)** x, RCPR_SYM(allocator)* y) { \
+            return LIBSAT_SYM(libsat_context_create)(x,y); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_base_as(sym) \
