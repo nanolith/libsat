@@ -74,7 +74,8 @@ LIBSAT_SYM(intern_entry_resource_release)(
 /******************************************************************************/
 
 /**
- * \brief Compare two opaque \ref intern_entry values.
+ * \brief Compare two opaque \ref intern_entry values for sorting in an
+ * intern-to-string tree mapping.
  *
  * \param context       Unused.
  * \param lhs           The left-hand side of the comparison.
