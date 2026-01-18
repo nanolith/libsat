@@ -68,6 +68,19 @@ status FN_DECL_MUST_CHECK
 LIBSAT_SYM(intern_entry_resource_release)(
     RCPR_SYM(resource)* r);
 
+/**
+ * \brief Release a \ref libsat_context resource.
+ *
+ * \param r             The resource to release.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_context_resource_release)(
+    RCPR_SYM(resource)* r);
+
 /******************************************************************************/
 /* Start of private methods.                                                  */
 /******************************************************************************/
