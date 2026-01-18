@@ -84,6 +84,7 @@ LIBSAT_SYM(prop_scanner_valid)(
  * \param scanner       Pointer to the scanner pointer to be set to this created
  *                      scanner instance on success.
  * \param context       The context for this operation.
+ * \param input         The input string to scan.
  *
  * \returns a status code indicating success or failure.
  *      - STATUS_SUCCESS on success.
@@ -91,7 +92,8 @@ LIBSAT_SYM(prop_scanner_valid)(
  */
 status FN_DECL_MUST_CHECK
 LIBSAT_SYM(libsat_scanner_create)(
-    LIBSAT_SYM(libsat_scanner)** scanner, LIBSAT_SYM(libsat_context)* context);
+    LIBSAT_SYM(libsat_scanner)** scanner, LIBSAT_SYM(libsat_context)* context,
+    const char* input);
 
 /******************************************************************************/
 /* Start of public exports.                                                   */
@@ -100,8 +102,9 @@ LIBSAT_SYM(libsat_scanner_create)(
     LIBSAT_BEGIN_EXPORT \
     typedef LIBSAT_SYM(libsat_scanner) sym ## libsat_scanner; \
     static inline status FN_DECL_MUST_CHECK sym ## libsat_scanner_create( \
-        LIBSAT_SYM(libsat_scanner)** x, LIBSAT_SYM(libsat_context)* y) { \
-            return LIBSAT_SYM(libsat_scanner_create)(x,y); } \
+        LIBSAT_SYM(libsat_scanner)** x, LIBSAT_SYM(libsat_context)* y, \
+        const char* z) { \
+            return LIBSAT_SYM(libsat_scanner_create)(x,y,z); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_scanner_as(sym) \
