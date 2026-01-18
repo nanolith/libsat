@@ -95,8 +95,8 @@ LIBSAT_SYM(libsat_context_create)(
  * \param var_id        Pointer to the variable id to be set on success.
  * \param context       The context for this operation.
  * \param var_name      The name of the variable.
- * \param create        Set to true if the variable should be created if not
- *                      found.
+ * \param flags         The flags to use for this get operation.
+ *                      \see libsat_context_variable_get_flags.
  *
  * \returns a status code indicating success or failure.
  *      - STATUS_SUCCESS on success.
@@ -105,7 +105,7 @@ LIBSAT_SYM(libsat_context_create)(
 status FN_DECL_MUST_CHECK
 LIBSAT_SYM(libsat_context_variable_get)(
     size_t* var_id, LIBSAT_SYM(libsat_context)* context, const char* var_name,
-    bool create);
+    int flags);
 
 /******************************************************************************/
 /* Start of public exports.                                                   */
