@@ -42,6 +42,9 @@ enum LIBSAT_SYM(libsat_context_variable_get_flags)
     /** \brief This variable is being created; check that it doesn't already
      * exist. */
     LIBSAT_VARIABLE_GET_CREATE =                                    0x0001,
+
+    /** \brief This variable is being referenced; it MUST already exist. */
+    LIBSAT_VARIABLE_GET_REF =                                       0x0002,
 };
 
 /******************************************************************************/
