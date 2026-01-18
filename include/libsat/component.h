@@ -32,6 +32,10 @@ enum libsat_subcomponents
     LIBSAT_SUBCOMPONENT_BASE =                                            0x00,
 };
 
+/** \brief Base component scope. */
+#define LIBSAT_COMPONENT_BASE \
+    COMPONENT_MAKE(LIBSAT_RESERVED_COMPONENT_FAMILY, LIBSAT_SUBCOMPONENT_BASE)
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
