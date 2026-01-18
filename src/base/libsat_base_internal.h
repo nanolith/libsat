@@ -160,6 +160,10 @@ LIBSAT_SYM(string_to_intern_tree_key)(
     sym ## intern_entry_resource_release( \
         RCPR_SYM(resource)* x) { \
             return LIBSAT_SYM(intern_entry_resource_release)(x); }  \
+    static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_context_resource_release( \
+        RCPR_SYM(resource)* x) { \
+            return LIBSAT_SYM(libsat_context_resource_release)(x); }  \
     static inline RCPR_SYM(rcpr_comparison_result) \
     sym ## intern_to_string_tree_compare( \
         void* x, const void* y, const void* z) { \
