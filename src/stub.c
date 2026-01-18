@@ -1,3 +1,4 @@
+#include <libsat/component.h>
 #include <libsat/libsat.h>
 #include <stdio.h>
 
