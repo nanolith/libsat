@@ -34,6 +34,16 @@ struct LIBSAT_SYM(libsat_context)
     size_t variable_count;
 };
 
+/**
+ * \brief Flags to pass to libsat_context_variable_get.
+ */
+enum LIBSAT_SYM(libsat_context_variable_get_flags)
+{
+    /** \brief This variable is being created; check that it doesn't already
+     * exist. */
+    LIBSAT_VARIABLE_GET_CREATE =                                    0x0001,
+};
+
 /******************************************************************************/
 /* Start of model checking properties.                                        */
 /******************************************************************************/
