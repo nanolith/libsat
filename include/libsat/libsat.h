@@ -39,6 +39,10 @@ struct LIBSAT_SYM(libsat_context)
  */
 enum LIBSAT_SYM(libsat_context_variable_get_flags)
 {
+    /** \brief By default, variables are created if they don't exist, and are
+     * returned if they already do. */
+    LIBSAT_VARIABLE_GET_DEFAULT =                                   0x0000,
+
     /** \brief This variable is being created; check that it doesn't already
      * exist. */
     LIBSAT_VARIABLE_GET_CREATE =                                    0x0001,
