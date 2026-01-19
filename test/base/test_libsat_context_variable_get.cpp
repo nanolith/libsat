@@ -106,3 +106,36 @@ TEST(REF_fails_if_variable_not_found)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * Base case: a new variable is created.
+ */
+TEST(base_case)
+{
+    allocator* alloc;
+    libsat_context* context;
+    size_t var_id = 100;
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* REF fails, because this variable has not yet been inserted. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_DEFAULT));
+
+    /* the variable reference is 0. */
+    TEST_EXPECT(0 == var_id);
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
