@@ -68,6 +68,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief End of input. */
     LIBSAT_SCANNER_TOKEN_TYPE_EOF = 0xFFFF,
+
+    /** \brief Bad input tokeg. */
+    LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT,
 };
 
 /**
