@@ -51,6 +51,22 @@ status FN_DECL_MUST_CHECK
 LIBSAT_SYM(libsat_scanner_resource_release)(
     RCPR_SYM(resource)* r);
 
+/******************************************************************************/
+/* Start of public exports.                                                   */
+/******************************************************************************/
+#define __INTERNAL_LIBSAT_IMPORT_scanner_internal_sym(sym) \
+    LIBSAT_BEGIN_EXPORT \
+    static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_scanner_resource_release( \
+        RCPR_SYM(resource)* x) { \
+            return LIBSAT_SYM(libsat_scanner_resource_release)(x); } \
+    LIBSAT_END_EXPORT \
+    REQUIRE_SEMICOLON_HERE
+#define LIBSAT_IMPORT_scanner_internal_as(sym) \
+    __INTERNAL_LIBSAT_IMPORT_scanner_internal_sym(sym ## _)
+#define LIBSAT_IMPORT_scanner_internal \
+    __INTERNAL_LIBSAT_IMPORT_scanner_internal_sym()
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
