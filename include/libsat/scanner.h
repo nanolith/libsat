@@ -49,6 +49,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
     /** \brief A material implication is false if the antecedent is true but the
      * consequent is false, and true otherwise. */
     LIBSAT_SCANNER_TOKEN_TYPE_IMPLICATION,
+
+    /** \brief A biconditional is true only if both sides are equal. */
+    LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL,
 };
 
 /**
