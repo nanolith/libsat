@@ -124,7 +124,7 @@ LIBSAT_SYM(libsat_context_resource_handle)(
             return LIBSAT_SYM(libsat_context_create)(x,y); } \
     static inline status FN_DECL_MUST_CHECK \
     sym ## libsat_context_variable_get( \
-        size_t* w, LIBSAT_SYM(libsat_context)* x, const char* y, bool z) { \
+        size_t* w, LIBSAT_SYM(libsat_context)* x, const char* y, int z) { \
             return LIBSAT_SYM(libsat_context_variable_get)(w,x,y,z); } \
     static inline RCPR_SYM(resource)* \
     sym ## libsat_context_resource_handle( \
