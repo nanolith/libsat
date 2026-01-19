@@ -108,6 +108,10 @@ LIBSAT_SYM(libsat_scanner_resource_handle)(
         LIBSAT_SYM(libsat_scanner)** x, LIBSAT_SYM(libsat_context)* y, \
         const char* z) { \
             return LIBSAT_SYM(libsat_scanner_create)(x,y,z); } \
+    static inline RCPR_SYM(resource)* \
+    sym ## libsat_scanner_resource_handle( \
+        LIBSAT_SYM(libsat_scanner)* x) { \
+            return LIBSAT_SYM(libsat_scanner_resource_handle)(x); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_scanner_as(sym) \
