@@ -11,9 +11,7 @@
 
 #include <libsat/scanner.h>
 #include <rcpr/allocator.h>
-#include <rcpr/rbtree.h>
 #include <rcpr/resource.h>
-#include <rcpr/resource/protected.h>
 #include <stdbool.h>
 
 /* C++ compatibility. */
@@ -25,14 +23,6 @@ extern "C" {
  * \brief Context for the libsat instance.
  */
 typedef struct LIBSAT_SYM(libsat_context) LIBSAT_SYM(libsat_context);
-struct LIBSAT_SYM(libsat_context)
-{
-    RCPR_SYM(resource) hdr;
-    RCPR_SYM(allocator)* alloc;
-    RCPR_SYM(rbtree)* string_to_intern;
-    RCPR_SYM(rbtree)* intern_to_string;
-    size_t variable_count;
-};
 
 /**
  * \brief Flags to pass to libsat_context_variable_get.
