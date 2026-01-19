@@ -139,3 +139,77 @@ TEST(base_case)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * CREATE fails if the variable already exists.
+ */
+TEST(CREATE_fails_when_variable_already_exists)
+{
+    allocator* alloc;
+    libsat_context* context;
+    size_t var_id = 100;
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* Insertion of a new variable succeeds. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_DEFAULT));
+
+    /* Attempting to create this variable a second time fails. */
+    TEST_ASSERT(
+        ERROR_LIBSAT_BASE_VARIABLE_GET_CREATE_ALREADY_EXISTS
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_CREATE));
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
+
+/**
+ * REF succeeds after a variable has been created.
+ */
+TEST(REF_after_insert)
+{
+    allocator* alloc;
+    libsat_context* context;
+    size_t var_id = 100;
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* Insertion of a new variable succeeds. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_DEFAULT));
+
+    /* REF now succeeds. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_REF));
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
