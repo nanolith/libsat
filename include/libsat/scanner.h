@@ -59,6 +59,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief A negation is true if its argument is false, and vice versa. */
     LIBSAT_SCANNER_TOKEN_TYPE_NEGATION,
+
+    /** \brief A true literal always evaluates to true. */
+    LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE,
 };
 
 /**
