@@ -122,7 +122,7 @@ TEST(base_case)
     /* create context. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
 
-    /* REF fails, because this variable has not yet been inserted. */
+    /* Insertion of a new variable succeeds. */
     TEST_ASSERT(
         STATUS_SUCCESS
             == libsat_context_variable_get(
