@@ -33,6 +33,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief Close parenthesis. */
     LIBSAT_SCANNER_TOKEN_TYPE_CLOSE_PAREN,
+
+    /** \brief Semicolon ends an expression. */
+    LIBSAT_SCANNER_TOKEN_TYPE_SEMICOLON,
 };
 
 /**
