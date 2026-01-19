@@ -185,6 +185,9 @@ LIBSAT_SYM(libsat_scanner_resource_handle)(
         LIBSAT_SYM(libsat_scanner)** x, LIBSAT_SYM(libsat_context)* y, \
         const char* z) { \
             return LIBSAT_SYM(libsat_scanner_create)(x,y,z); } \
+    static inline int FN_DECL_MUST_CHECK sym ## libsat_scanner_read_token( \
+        LIBSAT_SYM(libsat_scanner_token)* x, LIBSAT_SYM(libsat_scanner)* y) { \
+            return LIBSAT_SYM(libsat_scanner_read_token)(x,y); } \
     static inline RCPR_SYM(resource)* \
     sym ## libsat_scanner_resource_handle( \
         LIBSAT_SYM(libsat_scanner)* x) { \
