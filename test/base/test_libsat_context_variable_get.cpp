@@ -46,3 +46,33 @@ TEST(CREATE_REF)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * UNIQUE must be used with CREATE.
+ */
+TEST(UNIQUE_fails_without_CREATE)
+{
+    allocator* alloc;
+    libsat_context* context;
+    size_t var_id = 0;
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* UNIQUE can't be used without CREATE. */
+    TEST_ASSERT(
+        ERROR_LIBSAT_BASE_VARIABLE_GET_INCOMPATIBLE_FLAGS
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_UNIQUE));
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
