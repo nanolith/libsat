@@ -39,6 +39,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief A conjunction is true if both sides are true. */
     LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION,
+
+    /** \brief A disjunction is true if at least one side is true. */
+    LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION,
 };
 
 /**
