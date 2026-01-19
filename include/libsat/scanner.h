@@ -62,6 +62,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief A true literal always evaluates to true. */
     LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE,
+
+    /** \brief A false literal always evaluates to false. */
+    LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_FALSE,
 };
 
 /**
