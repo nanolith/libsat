@@ -85,6 +85,19 @@ LIBSAT_SYM(libsat_scanner_create)(
     LIBSAT_SYM(libsat_scanner)** scanner, LIBSAT_SYM(libsat_context)* context,
     const char* input);
 
+/**
+ * \brief Given a \ref libsat_scanner instance, return the resource handle for
+ * this instance.
+ *
+ * \param scanner      The \ref libsat_scanner instance from which the resource
+ *                      handle is returned.
+ *
+ * \returns the resource handle for this scanner instance.
+ */
+RCPR_SYM(resource)*
+LIBSAT_SYM(libsat_scanner_resource_handle)(
+    LIBSAT_SYM(libsat_scanner)* scanner);
+
 /******************************************************************************/
 /* Start of public exports.                                                   */
 /******************************************************************************/
