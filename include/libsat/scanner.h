@@ -42,6 +42,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief A disjunction is true if at least one side is true. */
     LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION,
+
+    /** \brief An exclusive disjunction is true if only one side is true. */
+    LIBSAT_SCANNER_TOKEN_TYPE_EXCLUSIVE_DISJUNCTION,
 };
 
 /**
