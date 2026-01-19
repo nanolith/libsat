@@ -48,16 +48,6 @@ struct LIBSAT_SYM(libsat_scanner_token)
  * creating propositional logic statements.
  */
 typedef struct LIBSAT_SYM(libsat_scanner) LIBSAT_SYM(libsat_scanner);
-struct LIBSAT_SYM(libsat_scanner)
-{
-    RCPR_SYM(resource) hdr;
-    RCPR_SYM(allocator)* alloc;
-    LIBSAT_SYM(libsat_context)* context;
-    const char* input;
-    size_t index;
-    size_t line;
-    size_t col;
-};
 
 /******************************************************************************/
 /* Start of model checking properties.                                        */

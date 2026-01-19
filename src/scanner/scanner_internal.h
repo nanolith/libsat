@@ -14,6 +14,20 @@
 extern "C" {
 # endif /*__cplusplus*/
 
+/**
+ * \brief libsat_scanner implementation.
+ */
+struct LIBSAT_SYM(libsat_scanner)
+{
+    RCPR_SYM(resource) hdr;
+    RCPR_SYM(allocator)* alloc;
+    LIBSAT_SYM(libsat_context)* context;
+    const char* input;
+    size_t index;
+    size_t line;
+    size_t col;
+};
+
 /******************************************************************************/
 /* Start of constructors.                                                     */
 /******************************************************************************/
