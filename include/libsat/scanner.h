@@ -21,6 +21,15 @@ extern "C" {
 # endif /*__cplusplus*/
 
 /**
+ * \brief Token types.
+ */
+enum LIBSAT_SYM(libsat_scanner_token_type)
+{
+    /** \brief A variable. */
+    LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE,
+};
+
+/**
  * \brief Token details.
  */
 typedef struct LIBSAT_SYM(libsat_scanner_token)
