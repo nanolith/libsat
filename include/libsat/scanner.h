@@ -30,6 +30,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief Open parenthesis. */
     LIBSAT_SCANNER_TOKEN_TYPE_OPEN_PAREN,
+
+    /** \brief Close parenthesis. */
+    LIBSAT_SCANNER_TOKEN_TYPE_CLOSE_PAREN,
 };
 
 /**
