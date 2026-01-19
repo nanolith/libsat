@@ -213,3 +213,40 @@ TEST(REF_after_insert)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * REF fails for a create unique, because unique variables can't be referenced.
+ */
+TEST(REF_fails_to_find_unique_variables)
+{
+    allocator* alloc;
+    libsat_context* context;
+    size_t var_id = 100;
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* Insertion of a new, unique variable succeeds. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_CREATE | LIBSAT_VARIABLE_GET_UNIQUE));
+
+    /* REF fails. */
+    TEST_ASSERT(
+        ERROR_LIBSAT_BASE_VARIABLE_GET_REF_NOT_FOUND
+            == libsat_context_variable_get(
+                    &var_id, context, "x",
+                    LIBSAT_VARIABLE_GET_REF));
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
