@@ -143,6 +143,25 @@ LIBSAT_SYM(libsat_scanner_create)(
 /******************************************************************************/
 
 /**
+ * \brief Read a token from the scanner instance, populating the provided token
+ * structure with additional details.
+ *
+ * \param details       Pointer to the token structure to receive additional
+ *                      details.
+ * \param scanner       The scanner instance from which this token is read.
+ *
+ * \returns a token from the scanner.
+ *      - LIBSAT_SCANNER_TOKEN_TYPE_EOF on end of input.
+ *      - LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT if the scanner encounters bad
+ *        input.
+ *      - a value belonging to the \ref libsat_scanner_token_type enumeration.
+ */
+int FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_scanner_read_token)(
+    LIBSAT_SYM(libsat_scanner_token)* details,
+    LIBSAT_SYM(libsat_scanner)* scanner);
+
+/**
  * \brief Given a \ref libsat_scanner instance, return the resource handle for
  * this instance.
  *
