@@ -180,6 +180,7 @@ LIBSAT_SYM(libsat_scanner_resource_handle)(
 #define __INTERNAL_LIBSAT_IMPORT_scanner_sym(sym) \
     LIBSAT_BEGIN_EXPORT \
     typedef LIBSAT_SYM(libsat_scanner) sym ## libsat_scanner; \
+    typedef LIBSAT_SYM(libsat_scanner_token) sym ## libsat_scanner_token; \
     static inline status FN_DECL_MUST_CHECK sym ## libsat_scanner_create( \
         LIBSAT_SYM(libsat_scanner)** x, LIBSAT_SYM(libsat_context)* y, \
         const char* z) { \
