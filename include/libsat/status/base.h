@@ -22,3 +22,10 @@
  */
 #define ERROR_LIBSAT_BASE_VARIABLE_GET_REF_NOT_FOUND \
     STATUS_CODE(1, LIBSAT_COMPONENT_BASE, 0x0001)
+
+/**
+ * \brief The user requested that the variable be created, but it already
+ * exists.
+ */
+#define ERROR_LIBSAT_BASE_VARIABLE_GET_CREATE_ALREADY_EXISTS \
+    STATUS_CODE(1, LIBSAT_COMPONENT_BASE, 0x0002)
