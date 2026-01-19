@@ -52,6 +52,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief A biconditional is true only if both sides are equal. */
     LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL,
+
+    /** \brief A negation is true if its argument is false, and vice versa. */
+    LIBSAT_SCANNER_TOKEN_TYPE_NEGATION,
 };
 
 /**
