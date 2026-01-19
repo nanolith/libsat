@@ -36,6 +36,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief Semicolon ends an expression. */
     LIBSAT_SCANNER_TOKEN_TYPE_SEMICOLON,
+
+    /** \brief A conjunction is true if both sides are true. */
+    LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION,
 };
 
 /**
