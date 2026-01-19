@@ -26,7 +26,7 @@ extern "C" {
 enum LIBSAT_SYM(libsat_scanner_token_type)
 {
     /** \brief A variable. */
-    LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE,
+    LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE = 1,
 
     /** \brief Open parenthesis. */
     LIBSAT_SCANNER_TOKEN_TYPE_OPEN_PAREN,
