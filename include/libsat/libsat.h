@@ -136,6 +136,10 @@ LIBSAT_SYM(libsat_context_resource_handle)(
     sym ## libsat_context_variable_get( \
         size_t* w, LIBSAT_SYM(libsat_context)* x, const char* y, bool z) { \
             return LIBSAT_SYM(libsat_context_variable_get)(w,x,y,z); } \
+    static inline RCPR_SYM(resource)* \
+    sym ## libsat_context_resource_handle( \
+        LIBSAT_SYM(libsat_context)* x) { \
+            return LIBSAT_SYM(libsat_context_resource_handle)(x); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_base_as(sym) \
