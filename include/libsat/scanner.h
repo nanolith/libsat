@@ -53,6 +53,10 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
     /** \brief A biconditional is true only if both sides are equal. */
     LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL,
 
+    /** \brief Assignment is more or less equivalent to a biconditional, but the
+     * left-hand-side must be a single variable. */
+    LIBSAT_SCANNER_TOKEN_TYPE_ASSIGNMENT,
+
     /** \brief A negation is true if its argument is false, and vice versa. */
     LIBSAT_SCANNER_TOKEN_TYPE_NEGATION,
 };
