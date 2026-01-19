@@ -110,6 +110,19 @@ LIBSAT_SYM(libsat_context_variable_get)(
     size_t* var_id, LIBSAT_SYM(libsat_context)* context, const char* var_name,
     int flags);
 
+/**
+ * \brief Given a \ref libsat_context instance, return the resource handle for
+ * this instance.
+ *
+ * \param context       The \ref libsat_context instance from which the resource
+ *                      handle is returned.
+ *
+ * \returns the resource handle for this context instance.
+ */
+RCPR_SYM(resource)*
+LIBSAT_SYM(libsat_context_resource_handle)(
+    LIBSAT_SYM(libsat_context)* context);
+
 /******************************************************************************/
 /* Start of public exports.                                                   */
 /******************************************************************************/
