@@ -45,6 +45,10 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 
     /** \brief An exclusive disjunction is true if only one side is true. */
     LIBSAT_SCANNER_TOKEN_TYPE_EXCLUSIVE_DISJUNCTION,
+
+    /** \brief A material implication is false if the antecedent is true but the
+     * consequent is false, and true otherwise. */
+    LIBSAT_SCANNER_TOKEN_TYPE_IMPLICATION,
 };
 
 /**
