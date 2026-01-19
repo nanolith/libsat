@@ -27,6 +27,9 @@ enum LIBSAT_SYM(libsat_scanner_token_type)
 {
     /** \brief A variable. */
     LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE,
+
+    /** \brief Open parenthesis. */
+    LIBSAT_SCANNER_TOKEN_TYPE_OPEN_PAREN,
 };
 
 /**
