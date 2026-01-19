@@ -60,7 +60,7 @@ LIBSAT_SYM(libsat_context_create)(
     retval =
         rbtree_create(
             &tmp->string_to_intern, alloc, &string_to_intern_tree_compare,
-            &intern_to_string_tree_key, NULL);
+            &string_to_intern_tree_key, NULL);
     if (STATUS_SUCCESS != retval)
     {
         goto cleanup_tmp;
