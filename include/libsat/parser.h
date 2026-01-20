@@ -71,16 +71,20 @@ struct LIBSAT_SYM(libsat_ast_node)
     union {
         /** \brief variable index. */
         int variable_index;
+
         /** \brief boolean literal. */
         bool boolean_literal;
+
         /** \brief unary node. */
         LIBSAT_SYM(libsat_ast_node)* unary;
+
         /** \brief binary node. */
         struct
         {
             LIBSAT_SYM(libsat_ast_node)* lhs;
             LIBSAT_SYM(libsat_ast_node)* rhs;
         } binary;
+
         /** \brief list node. */
         struct
         {
