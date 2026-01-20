@@ -24,6 +24,9 @@ enum LIBSAT_SYM(libsat_parser_ast_node_type)
     /** \brief A variable node. */
     LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE,
 
+    /** \brief A literal node. */
+    LIBSAT_PARSER_AST_NODE_TYPE_LITERAL,
+
     /** \brief A negation node. */
     LIBSAT_PARSER_AST_NODE_TYPE_NEGATION,
 
