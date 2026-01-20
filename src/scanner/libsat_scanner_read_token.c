@@ -393,6 +393,29 @@ static int scan_math_block(
             goto bad_character;
         }
     }
+    else if (0x8A == peek)
+    {
+        next_character(scanner);
+        peek = peek_character(scanner);
+
+        /* is this an exclusive disjunction? */
+        if (0xBB == peek)
+        {
+            next_character(scanner);
+            peek =
+                end_details(
+                    details, scanner,
+                    LIBSAT_SCANNER_TOKEN_TYPE_EXCLUSIVE_DISJUNCTION);
+
+            next_character(scanner);
+
+            return peek;
+        }
+        else
+        {
+            goto bad_character;
+        }
+    }
     else
     {
         goto bad_character;
