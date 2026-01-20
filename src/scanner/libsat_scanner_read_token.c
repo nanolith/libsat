@@ -21,6 +21,11 @@ static void start_details(
 static int end_details(
     libsat_scanner_token* details, libsat_scanner* scanner, int token_type);
 static void next_character(libsat_scanner* scanner);
+static int peek_character(libsat_scanner* scanner);
+static int scan_true_or_variable(
+    libsat_scanner_token* details, libsat_scanner* scanner);
+static int scan_variable(
+    libsat_scanner_token* details, libsat_scanner* scanner);
 
 /**
  * \brief Read a token from the scanner instance, populating the provided token
@@ -63,6 +68,10 @@ LIBSAT_SYM(libsat_scanner_read_token)(
                 end_details(
                     details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_OPEN_PAREN);
             goto consume_input;
+
+        case 't':
+            retval = scan_true_or_variable(details, scanner);
+            goto done;
 
         case ')':
             retval =
@@ -155,4 +164,99 @@ static void next_character(libsat_scanner* scanner)
 
     scanner->input += 1;
     scanner->index += 1;
+}
+
+/**
+ * \brief Peek the next character in the stream.
+ *
+ * \param scanner       The scanner instance for this operation.
+ *
+ * \returns the next character.
+ */
+static int peek_character(libsat_scanner* scanner)
+{
+    return *(scanner->input + 1);
+}
+
+/**
+ * \brief Scan the true literal, or fall back to scanning a variable.
+ *
+ * \param details       The token details for this operation.
+ * \param scanner       The scanner for this operation.
+ *
+ * \returns the scanned token.
+ */
+static int scan_true_or_variable(
+    libsat_scanner_token* details, libsat_scanner* scanner)
+{
+    int peek = peek_character(scanner);
+
+    if ('r' != peek)
+    {
+        return scan_variable(details, scanner);
+    }
+
+    next_character(scanner);
+    peek = peek_character(scanner);
+
+    if ('u' != peek)
+    {
+        return scan_variable(details, scanner);
+    }
+
+    next_character(scanner);
+    peek = peek_character(scanner);
+
+    if ('e' != peek)
+    {
+        return scan_variable(details, scanner);
+    }
+
+    next_character(scanner);
+    peek = peek_character(scanner);
+
+    if (isalnum(peek))
+    {
+        return scan_variable(details, scanner);
+    }
+    else
+    {
+        peek =
+            end_details(
+                details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE);
+
+        next_character(scanner);
+
+        return peek;
+    }
+}
+
+/**
+ * \brief Scan a variable.
+ *
+ * \param details       The token details for this operation.
+ * \param scanner       The scanner for this operation.
+ *
+ * \returns the scanned token.
+ */
+static int scan_variable(
+    libsat_scanner_token* details, libsat_scanner* scanner)
+{
+    int peek;
+
+    peek = peek_character(scanner);
+
+    while (isalnum(peek))
+    {
+        next_character(scanner);
+        peek = peek_character(scanner);
+    }
+
+    peek =
+        end_details(
+            details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE);
+
+    next_character(scanner);
+
+    return peek;
 }
