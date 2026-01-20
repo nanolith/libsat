@@ -95,6 +95,19 @@ struct LIBSAT_SYM(libsat_ast_node)
  */
 typedef struct LIBSAT_SYM(libsat_parser) LIBSAT_SYM(libsat_parser);
 
+/******************************************************************************/
+/* Start of public exports.                                                   */
+/******************************************************************************/
+#define __INTERNAL_LIBSAT_IMPORT_parser_sym(sym) \
+    LIBSAT_BEGIN_EXPORT \
+    typedef LIBSAT_SYM(libsat_parser) sym ## libsat_parser; \
+    LIBSAT_END_EXPORT \
+    REQUIRE_SEMICOLON_HERE
+#define LIBSAT_IMPORT_parser_as(sym) \
+    __INTERNAL_LIBSAT_IMPORT_parser_sym(sym ## _)
+#define LIBSAT_IMPORT_parser \
+    __INTERNAL_LIBSAT_IMPORT_parser_sym()
+
 /* C++ compatibility. */
 # ifdef   __cplusplus
 }
