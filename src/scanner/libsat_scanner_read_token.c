@@ -376,6 +376,17 @@ static int scan_math_block(
 
             return peek;
         }
+        else if (0x94 == peek)
+        {
+            next_character(scanner);
+            peek =
+                end_details(
+                    details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL);
+
+            next_character(scanner);
+
+            return peek;
+        }
         else
         {
             goto unexpected_glyph;
