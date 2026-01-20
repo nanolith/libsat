@@ -64,6 +64,12 @@ LIBSAT_SYM(libsat_scanner_read_token)(
                     details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_OPEN_PAREN);
             goto consume_input;
 
+        case ')':
+            retval =
+                end_details(
+                    details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_CLOSE_PAREN);
+            goto consume_input;
+
         default:
             retval =
                 end_details(
