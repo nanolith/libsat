@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <libsat/parser.h>
 #include <libsat/scanner.h>
 #include <rcpr/allocator.h>
 #include <rcpr/resource.h>
