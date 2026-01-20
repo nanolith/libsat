@@ -6,4 +6,5 @@
 #include "scanner/scanner_internal.h"
 
 LIBSAT_IMPORT_base;
+LIBSAT_IMPORT_parser;
 LIBSAT_IMPORT_scanner;
