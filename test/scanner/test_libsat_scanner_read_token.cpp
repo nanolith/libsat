@@ -112,3 +112,56 @@ TEST(space_string_eof)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * The empty string returns LIBSAT_SCANNER_TOKEN_TYPE_EOF, even if called twice.
+ */
+TEST(empty_string_eof_eof)
+{
+    allocator* alloc;
+    libsat_context* context;
+    libsat_scanner* scanner;
+    libsat_scanner_token details;
+    const char* input = R"()";
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* create scanner. */
+    TEST_ASSERT(
+        STATUS_SUCCESS == libsat_scanner_create(&scanner, context, input));
+
+    /* read a token from the scanner. */
+    int token = libsat_scanner_read_token(&details, scanner);
+
+    /* this token should be EOF. */
+    TEST_EXPECT(LIBSAT_SCANNER_TOKEN_TYPE_EOF == token);
+
+    /* read the next token from the scanner. */
+    token = libsat_scanner_read_token(&details, scanner);
+
+    /* this token should still be EOF. */
+    TEST_EXPECT(LIBSAT_SCANNER_TOKEN_TYPE_EOF == token);
+
+    /* verify the details. */
+    TEST_EXPECT(token == details.type);
+    TEST_EXPECT(0 == details.begin_index);
+    TEST_EXPECT(0 == details.end_index);
+    TEST_EXPECT(1 == details.begin_line);
+    TEST_EXPECT(1 == details.end_line);
+    TEST_EXPECT(1 == details.begin_col);
+    TEST_EXPECT(1 == details.end_col);
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS ==
+            resource_release(libsat_scanner_resource_handle(scanner)));
+    TEST_ASSERT(
+        STATUS_SUCCESS ==
+            resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
