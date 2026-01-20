@@ -41,19 +41,35 @@ LIBSAT_SYM(libsat_scanner_read_token)(
     LIBSAT_SYM(libsat_scanner_token)* details,
     LIBSAT_SYM(libsat_scanner)* scanner)
 {
+    int retval;
     int ch = skip_whitespace(scanner);
     start_details(details, scanner);
 
     switch (ch)
     {
         case 0:
-            return end_details(details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_EOF);
+            retval =
+                end_details(details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_EOF);
+            goto done;
+
+        case ';':
+            retval =
+                end_details(
+                    details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_SEMICOLON);
+            goto consume_input;
 
         default:
-            return
+            retval =
                 end_details(
                     details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT);
+            goto done;
     }
+
+consume_input:
+    next_character(scanner);
+
+done:
+    return retval;
 }
 
 /**
