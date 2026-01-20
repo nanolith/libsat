@@ -101,6 +101,7 @@ typedef struct LIBSAT_SYM(libsat_parser) LIBSAT_SYM(libsat_parser);
 #define __INTERNAL_LIBSAT_IMPORT_parser_sym(sym) \
     LIBSAT_BEGIN_EXPORT \
     typedef LIBSAT_SYM(libsat_parser) sym ## libsat_parser; \
+    typedef LIBSAT_SYM(libsat_ast_node) sym ## libsat_ast_node; \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_parser_as(sym) \
