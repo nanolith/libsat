@@ -28,6 +28,8 @@ static int scan_false_or_variable(
     libsat_scanner_token* details, libsat_scanner* scanner);
 static int scan_variable(
     libsat_scanner_token* details, libsat_scanner* scanner);
+static int scan_math_block(
+    libsat_scanner_token* details, libsat_scanner* scanner);
 
 /**
  * \brief Read a token from the scanner instance, populating the provided token
@@ -84,6 +86,10 @@ LIBSAT_SYM(libsat_scanner_read_token)(
                 end_details(
                     details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_CLOSE_PAREN);
             goto consume_input;
+
+        case 0xE2:
+            retval = scan_math_block(details, scanner);
+            goto done;
 
         default:
             if (isalpha(ch) || '_' == ch)
@@ -155,7 +161,7 @@ static int skip_whitespace(libsat_scanner* scanner)
         next_character(scanner);
     }
 
-    return *(scanner->input);
+    return (unsigned char)*(scanner->input);
 }
 
 /**
@@ -188,7 +194,7 @@ static void next_character(libsat_scanner* scanner)
  */
 static int peek_character(libsat_scanner* scanner)
 {
-    return *(scanner->input + 1);
+    return (unsigned char)*(scanner->input + 1);
 }
 
 /**
@@ -333,4 +339,59 @@ static int scan_variable(
     next_character(scanner);
 
     return peek;
+}
+
+/**
+ * \brief Scan a character in the math block.
+ *
+ * \param details       The token details for this operation.
+ * \param scanner       The scanner for this operation.
+ *
+ * \returns the scanned token.
+ */
+static int scan_math_block(
+    libsat_scanner_token* details, libsat_scanner* scanner)
+{
+    /* cache position in case of failure. */
+    const char* input = scanner->input;
+    size_t index = scanner->index;
+    size_t line = scanner->line;
+    size_t col = scanner->col;
+
+    int peek = peek_character(scanner);
+    if (0x88 == peek)
+    {
+        next_character(scanner);
+        peek = peek_character(scanner);
+
+        /* is this a conjunction? */
+        if (0xA7 == peek)
+        {
+            next_character(scanner);
+            peek =
+                end_details(
+                    details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION);
+
+            next_character(scanner);
+
+            return peek;
+        }
+        else
+        {
+            goto bad_character;
+        }
+    }
+    else
+    {
+        goto bad_character;
+    }
+
+bad_character:
+    /* reset scanner. */
+    scanner->input = input;
+    scanner->index = index;
+    scanner->line = line;
+    scanner->col = col;
+
+    return end_details(details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT);
 }
