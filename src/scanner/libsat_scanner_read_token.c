@@ -86,9 +86,16 @@ LIBSAT_SYM(libsat_scanner_read_token)(
             goto consume_input;
 
         default:
-            retval =
-                end_details(
-                    details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT);
+            if (isalpha(ch) || '_' == ch)
+            {
+                retval = scan_variable(details, scanner);
+            }
+            else
+            {
+                retval =
+                    end_details(
+                        details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT);
+            }
             goto done;
     }
 
@@ -313,7 +320,7 @@ static int scan_variable(
 
     peek = peek_character(scanner);
 
-    while (isalnum(peek))
+    while (isalnum(peek) || '_' == peek)
     {
         next_character(scanner);
         peek = peek_character(scanner);
