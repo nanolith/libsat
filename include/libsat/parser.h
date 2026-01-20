@@ -17,6 +17,15 @@ extern "C" {
 # endif /*__cplusplus*/
 
 /**
+ * \brief AST node types.
+ */
+enum LIBSAT_SYM(libsat_parser_ast_node_type)
+{
+    /** \brief A variable node. */
+    LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE,
+};
+
+/**
  * \brief A parser capable of generating an AST based on input strings for
  * creating propositional logic statements.
  */
