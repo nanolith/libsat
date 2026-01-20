@@ -32,6 +32,9 @@ enum LIBSAT_SYM(libsat_parser_ast_node_type)
 
     /** \brief A disjunction node. */
     LIBSAT_PARSER_AST_NODE_TYPE_DISJUNCTION,
+
+    /** \brief An exclusive disjunction node. */
+    LIBSAT_PARSER_AST_NODE_TYPE_EXCLUSIVE_DISJUNCTION,
 };
 
 /**
