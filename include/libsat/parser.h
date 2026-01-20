@@ -41,6 +41,9 @@ enum LIBSAT_SYM(libsat_parser_ast_node_type)
 
     /** \brief A biconditional node. */
     LIBSAT_PARSER_AST_NODE_TYPE_BICONDITIONAL,
+
+    /** \brief An assignment node. */
+    LIBSAT_PARSER_AST_NODE_TYPE_ASSIGNMENT,
 };
 
 /**
