@@ -66,6 +66,7 @@ struct LIBSAT_SYM(libsat_ast_node)
 {
     RCPR_SYM(resource) hdr;
     RCPR_SYM(allocator)* alloc;
+    LIBSAT_SYM(libsat_ast_node)* next;
     int type;
     union {
         /** \brief variable index. */
@@ -83,8 +84,7 @@ struct LIBSAT_SYM(libsat_ast_node)
         /** \brief list node. */
         struct
         {
-            LIBSAT_SYM(libsat_ast_node)* next;
-            LIBSAT_SYM(libsat_ast_node)* value;
+            LIBSAT_SYM(libsat_ast_node)* head;
         } list;
     } values;
 };
