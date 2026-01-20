@@ -853,3 +853,55 @@ TEST(logic_expression1)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * Scan a simple logic expression with no spaces.
+ */
+TEST(logic_expression1_no_spaces)
+{
+    allocator* alloc;
+    libsat_context* context;
+    libsat_scanner* scanner;
+    libsat_scanner_token details;
+    const char* input = R"(¬x∧y)";
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* create scanner. */
+    TEST_ASSERT(
+        STATUS_SUCCESS == libsat_scanner_create(&scanner, context, input));
+
+    /* Not */
+    int token = libsat_scanner_read_token(&details, scanner);
+    TEST_ASSERT(LIBSAT_SCANNER_TOKEN_TYPE_NEGATION == token);
+
+    /* x */
+    token = libsat_scanner_read_token(&details, scanner);
+    TEST_EXPECT(LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE == token);
+
+    /* and */
+    token = libsat_scanner_read_token(&details, scanner);
+    TEST_ASSERT(LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION == token);
+
+    /* y. */
+    token = libsat_scanner_read_token(&details, scanner);
+    TEST_EXPECT(LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE == token);
+
+    /* EOF */
+    token = libsat_scanner_read_token(&details, scanner);
+    TEST_ASSERT(LIBSAT_SCANNER_TOKEN_TYPE_EOF == token);
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS ==
+            resource_release(libsat_scanner_resource_handle(scanner)));
+    TEST_ASSERT(
+        STATUS_SUCCESS ==
+            resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
