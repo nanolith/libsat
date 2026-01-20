@@ -376,6 +376,18 @@ static int scan_math_block(
 
             return peek;
         }
+        /* is this a disjunction? */
+        else if (0xA8 == peek)
+        {
+            next_character(scanner);
+            peek =
+                end_details(
+                    details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION);
+
+            next_character(scanner);
+
+            return peek;
+        }
         else
         {
             goto bad_character;
