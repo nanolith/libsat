@@ -24,6 +24,8 @@ static void next_character(libsat_scanner* scanner);
 static int peek_character(libsat_scanner* scanner);
 static int scan_true_or_variable(
     libsat_scanner_token* details, libsat_scanner* scanner);
+static int scan_false_or_variable(
+    libsat_scanner_token* details, libsat_scanner* scanner);
 static int scan_variable(
     libsat_scanner_token* details, libsat_scanner* scanner);
 
@@ -71,6 +73,10 @@ LIBSAT_SYM(libsat_scanner_read_token)(
 
         case 't':
             retval = scan_true_or_variable(details, scanner);
+            goto done;
+
+        case 'f':
+            retval = scan_false_or_variable(details, scanner);
             goto done;
 
         case ')':
@@ -224,6 +230,67 @@ static int scan_true_or_variable(
         peek =
             end_details(
                 details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE);
+
+        next_character(scanner);
+
+        return peek;
+    }
+}
+
+/**
+ * \brief Scan the false literal, or fall back to scanning a variable.
+ *
+ * \param details       The token details for this operation.
+ * \param scanner       The scanner for this operation.
+ *
+ * \returns the scanned token.
+ */
+static int scan_false_or_variable(
+    libsat_scanner_token* details, libsat_scanner* scanner)
+{
+    int peek = peek_character(scanner);
+
+    if ('a' != peek)
+    {
+        return scan_variable(details, scanner);
+    }
+
+    next_character(scanner);
+    peek = peek_character(scanner);
+
+    if ('l' != peek)
+    {
+        return scan_variable(details, scanner);
+    }
+
+    next_character(scanner);
+    peek = peek_character(scanner);
+
+    if ('s' != peek)
+    {
+        return scan_variable(details, scanner);
+    }
+
+    next_character(scanner);
+    peek = peek_character(scanner);
+
+    if ('e' != peek)
+    {
+        return scan_variable(details, scanner);
+    }
+
+    next_character(scanner);
+    peek = peek_character(scanner);
+
+    if (isalnum(peek))
+    {
+        return scan_variable(details, scanner);
+    }
+    else
+    {
+        peek =
+            end_details(
+                details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_FALSE);
 
         next_character(scanner);
 
