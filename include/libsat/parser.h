@@ -50,6 +50,9 @@ enum LIBSAT_SYM(libsat_parser_ast_node_type)
 
     /** \brief A statement node. */
     LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT,
+
+    /** \brief A statement list. */
+    LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST,
 };
 
 /**
