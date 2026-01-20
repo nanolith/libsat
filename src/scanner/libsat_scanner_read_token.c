@@ -390,7 +390,7 @@ static int scan_math_block(
         }
         else
         {
-            goto bad_character;
+            goto unexpected_glyph;
         }
     }
     else if (0x8A == peek)
@@ -413,15 +413,15 @@ static int scan_math_block(
         }
         else
         {
-            goto bad_character;
+            goto unexpected_glyph;
         }
     }
     else
     {
-        goto bad_character;
+        goto unexpected_glyph;
     }
 
-bad_character:
+unexpected_glyph:
     /* reset scanner. */
     scanner->input = input;
     scanner->index = index;
