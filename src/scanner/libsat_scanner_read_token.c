@@ -359,7 +359,29 @@ static int scan_math_block(
     size_t col = scanner->col;
 
     int peek = peek_character(scanner);
-    if (0x88 == peek)
+    if (0x86 == peek)
+    {
+        next_character(scanner);
+        peek = peek_character(scanner);
+
+        /* is this an implication? */
+        if (0x92 == peek)
+        {
+            next_character(scanner);
+            peek =
+                end_details(
+                    details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_IMPLICATION);
+
+            next_character(scanner);
+
+            return peek;
+        }
+        else
+        {
+            goto unexpected_glyph;
+        }
+    }
+    else if (0x88 == peek)
     {
         next_character(scanner);
         peek = peek_character(scanner);
