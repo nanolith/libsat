@@ -10,6 +10,9 @@
 #pragma once
 
 #include <libsat/function_decl.h>
+#include <rcpr/allocator.h>
+#include <rcpr/resource.h>
+#include <rcpr/resource/protected.h>
 
 /* C++ compatibility. */
 # ifdef   __cplusplus
@@ -53,6 +56,37 @@ enum LIBSAT_SYM(libsat_parser_ast_node_type)
 
     /** \brief A statement list. */
     LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST,
+};
+
+/**
+ * \brief An AST node from the parser.
+ */
+typedef struct LIBSAT_SYM(libsat_ast_node) LIBSAT_SYM(libsat_ast_node);
+struct LIBSAT_SYM(libsat_ast_node)
+{
+    RCPR_SYM(resource) hdr;
+    RCPR_SYM(allocator)* alloc;
+    int type;
+    union {
+        /** \brief variable index. */
+        int variable_index;
+        /** \brief boolean literal. */
+        bool boolean_literal;
+        /** \brief unary node. */
+        LIBSAT_SYM(libsat_ast_node)* unary;
+        /** \brief binary node. */
+        struct
+        {
+            LIBSAT_SYM(libsat_ast_node)* lhs;
+            LIBSAT_SYM(libsat_ast_node)* rhs;
+        } binary;
+        /** \brief list node. */
+        struct
+        {
+            LIBSAT_SYM(libsat_ast_node)* next;
+            LIBSAT_SYM(libsat_ast_node)* value;
+        } list;
+    } values;
 };
 
 /**
