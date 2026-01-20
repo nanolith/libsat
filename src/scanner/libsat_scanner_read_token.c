@@ -30,6 +30,8 @@ static int scan_variable(
     libsat_scanner_token* details, libsat_scanner* scanner);
 static int scan_math_block(
     libsat_scanner_token* details, libsat_scanner* scanner);
+static int scan_negation(
+    libsat_scanner_token* details, libsat_scanner* scanner);
 
 /**
  * \brief Read a token from the scanner instance, populating the provided token
@@ -89,6 +91,10 @@ LIBSAT_SYM(libsat_scanner_read_token)(
 
         case 0xE2:
             retval = scan_math_block(details, scanner);
+            goto done;
+
+        case 0xC2:
+            retval = scan_negation(details, scanner);
             goto done;
 
         default:
@@ -342,7 +348,7 @@ static int scan_variable(
 }
 
 /**
- * \brief Scan a character in the math block.
+ * \brief Scan a glyph in the math block.
  *
  * \param details       The token details for this operation.
  * \param scanner       The scanner for this operation.
@@ -462,4 +468,45 @@ unexpected_glyph:
     scanner->col = col;
 
     return end_details(details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT);
+}
+
+/**
+ * \brief Scan a negation glyph.
+ *
+ * \param details       The token details for this operation.
+ * \param scanner       The scanner for this operation.
+ *
+ * \returns the scanned token.
+ */
+static int scan_negation(
+    libsat_scanner_token* details, libsat_scanner* scanner)
+{
+    /* cache position in case of failure. */
+    const char* input = scanner->input;
+    size_t index = scanner->index;
+    size_t line = scanner->line;
+    size_t col = scanner->col;
+
+    int peek = peek_character(scanner);
+    if (0xAC == peek)
+    {
+        next_character(scanner);
+        peek =
+            end_details(details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_NEGATION);
+
+        next_character(scanner);
+
+        return peek;
+    }
+    else
+    {
+        /* reset scanner. */
+        scanner->input = input;
+        scanner->index = index;
+        scanner->line = line;
+        scanner->col = col;
+
+        return
+            end_details(details, scanner, LIBSAT_SCANNER_TOKEN_TYPE_BAD_INPUT);
+    }
 }
