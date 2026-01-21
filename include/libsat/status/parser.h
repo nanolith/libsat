@@ -16,3 +16,9 @@
  */
 #define ERROR_LIBSAT_PARSER_EMPTY_INPUT \
     STATUS_CODE(1, LIBSAT_COMPONENT_PARSER, 0x0000)
+
+/**
+ * \brief An unexpected token was encountered.
+ */
+#define ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN \
+    STATUS_CODE(1, LIBSAT_COMPONENT_PARSER, 0x0001)
