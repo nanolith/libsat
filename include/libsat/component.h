@@ -30,11 +30,18 @@ enum libsat_subcomponents
 {
     /** \brief Base subcomponent. */
     LIBSAT_SUBCOMPONENT_BASE =                                            0x00,
+
+    /** \brief Parser subcomponent. */
+    LIBSAT_SUBCOMPONENT_PARSER =                                          0x01,
 };
 
 /** \brief Base component scope. */
 #define LIBSAT_COMPONENT_BASE \
     COMPONENT_MAKE(LIBSAT_RESERVED_COMPONENT_FAMILY, LIBSAT_SUBCOMPONENT_BASE)
+
+/** \brief Parser component scope. */
+#define LIBSAT_COMPONENT_PARSER \
+    COMPONENT_MAKE(LIBSAT_RESERVED_COMPONENT_FAMILY, LIBSAT_SUBCOMPONENT_PARSER)
 
 /* C++ compatibility. */
 # ifdef   __cplusplus
