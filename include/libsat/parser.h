@@ -137,6 +137,24 @@ LIBSAT_SYM(libsat_parser_create)(
     const char* input);
 
 /******************************************************************************/
+/* Start of public methods.                                                   */
+/******************************************************************************/
+
+/**
+ * \brief Parse an input string.
+ *
+ * \param context       The context for this operation.
+ * \param input         The input string to parse.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_parse)(
+    LIBSAT_SYM(libsat_context)* context, const char* input);
+
+/******************************************************************************/
 /* Start of public exports.                                                   */
 /******************************************************************************/
 #define __INTERNAL_LIBSAT_IMPORT_parser_sym(sym) \
