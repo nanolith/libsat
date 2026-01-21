@@ -100,6 +100,21 @@ struct LIBSAT_SYM(libsat_ast_node)
 typedef struct LIBSAT_SYM(libsat_parser) LIBSAT_SYM(libsat_parser);
 
 /******************************************************************************/
+/* Start of model checking properties.                                        */
+/******************************************************************************/
+
+/**
+ * \brief Valid parser property.
+ *
+ * \param parser        The parser instance to be verified.
+ *
+ * \returns true if the parser instance is valid.
+ */
+bool
+LIBSAT_SYM(prop_parser_valid)(
+    const LIBSAT_SYM(libsat_parser)* parser);
+
+/******************************************************************************/
 /* Start of public exports.                                                   */
 /******************************************************************************/
 #define __INTERNAL_LIBSAT_IMPORT_parser_sym(sym) \
