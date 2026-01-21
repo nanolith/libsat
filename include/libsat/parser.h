@@ -143,6 +143,11 @@ LIBSAT_SYM(libsat_parser_create)(
     LIBSAT_BEGIN_EXPORT \
     typedef LIBSAT_SYM(libsat_parser) sym ## libsat_parser; \
     typedef LIBSAT_SYM(libsat_ast_node) sym ## libsat_ast_node; \
+    static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_parser_create( \
+        LIBSAT_SYM(libsat_parser)** x, LIBSAT_SYM(libsat_context)* y, \
+        const char* z) { \
+            return LIBSAT_SYM(libsat_parser_create)(x,y,z); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_parser_as(sym) \
