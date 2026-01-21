@@ -10,6 +10,7 @@
 #pragma once
 
 #include <libsat/function_decl.h>
+#include <libsat/libsat_fwd.h>
 #include <rcpr/allocator.h>
 #include <rcpr/resource.h>
 #include <rcpr/resource/protected.h>
@@ -113,6 +114,27 @@ typedef struct LIBSAT_SYM(libsat_parser) LIBSAT_SYM(libsat_parser);
 bool
 LIBSAT_SYM(prop_parser_valid)(
     const LIBSAT_SYM(libsat_parser)* parser);
+
+/******************************************************************************/
+/* Start of constructors.                                                     */
+/******************************************************************************/
+
+/**
+ * \brief Create a parser instance.
+ *
+ * \param parser        Pointer to the parser  pointer to be set to this created
+ *                      parser  instance on success.
+ * \param context       The context for this operation.
+ * \param input         The input string to parse.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_parser_create)(
+    LIBSAT_SYM(libsat_parser)** parser, LIBSAT_SYM(libsat_context)* context,
+    const char* input);
 
 /******************************************************************************/
 /* Start of public exports.                                                   */
