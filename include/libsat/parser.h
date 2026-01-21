@@ -143,6 +143,7 @@ LIBSAT_SYM(libsat_parser_create)(
 /**
  * \brief Parse an input string.
  *
+ * \param node          The AST node created on success.
  * \param context       The context for this operation.
  * \param input         The input string to parse.
  *
@@ -152,7 +153,8 @@ LIBSAT_SYM(libsat_parser_create)(
  */
 status FN_DECL_MUST_CHECK
 LIBSAT_SYM(libsat_parse)(
-    LIBSAT_SYM(libsat_context)* context, const char* input);
+    LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
+    const char* input);
 
 /******************************************************************************/
 /* Start of public exports.                                                   */
