@@ -11,4 +11,5 @@
 
 #include <libsat/component.h>
 #include <libsat/status/base.h>
+#include <libsat/status/parser.h>
 #include <rcpr/status.h>
