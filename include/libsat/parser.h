@@ -91,7 +91,7 @@ struct LIBSAT_SYM(libsat_ast_node)
         {
             LIBSAT_SYM(libsat_ast_node)* head;
         } list;
-    } values;
+    } value;
 };
 
 /******************************************************************************/
