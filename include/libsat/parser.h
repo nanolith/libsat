@@ -136,6 +136,10 @@ LIBSAT_SYM(libsat_ast_node_resource_handle)(
         LIBSAT_SYM(libsat_ast_node)** x, LIBSAT_SYM(libsat_context)* y, \
         const char* z) { \
             return LIBSAT_SYM(libsat_parse)(x,y,z); } \
+    static inline RCPR_SYM(resource)* \
+    sym ## libsat_ast_node_resource_handle( \
+        LIBSAT_SYM(libsat_ast_node)* x) { \
+            return LIBSAT_SYM(libsat_ast_node_resource_handle)(x); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_parser_as(sym) \
