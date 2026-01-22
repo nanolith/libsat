@@ -114,6 +114,17 @@ LIBSAT_SYM(libsat_parse)(
     LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
     const char* input);
 
+/**
+ * \brief Get the resource associated with a \ref libsat_ast_node.
+ *
+ * \param node          The node for this operation.
+ *
+ * \returns the resource handle for this \ref libsat_ast_node.
+ */
+RCPR_SYM(resource)*
+LIBSAT_SYM(libsat_ast_node_resource_handle)(
+    LIBSAT_SYM(libsat_ast_node)* node);
+
 /******************************************************************************/
 /* Start of public exports.                                                   */
 /******************************************************************************/
