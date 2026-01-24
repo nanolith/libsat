@@ -10,6 +10,7 @@
 #pragma once
 
 #include <libsat/parser.h>
+#include <stdbool.h>
 
 /* C++ compatibility. */
 # ifdef   __cplusplus
@@ -37,6 +38,22 @@ status FN_DECL_MUST_CHECK
 LIBSAT_SYM(libsat_ast_node_create_from_variable)(
     LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
     const char* var_name, int mode);
+
+/**
+ * \brief Create an AST node from a boolean literal.
+ *
+ * \param node          Pointer to receive the node on success.
+ * \param context       The \ref libsat_context for this operation.
+ * \param value         The boolean value.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_node_create_from_boolean_literal)(
+    LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
+    bool value);
 
 /**
  * \brief Release a \ref libsat_ast_node resource.
