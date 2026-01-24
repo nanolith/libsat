@@ -57,6 +57,12 @@ LIBSAT_SYM(libsat_ast_node_resource_release)(
 #define __INTERNAL_LIBSAT_IMPORT_parser_internal_sym(sym) \
     LIBSAT_BEGIN_EXPORT \
     static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_ast_node_create_from_variable( \
+        LIBSAT_SYM(libsat_ast_node)** w, LIBSAT_SYM(libsat_context)* x \
+        const char* y, int z) { \
+            return \
+                LIBSAT_SYM(libsat_ast_node_create_from_variable)(w,x,y,z); } \
+    static inline status FN_DECL_MUST_CHECK \
     sym ## libsat_ast_node_resource_release( \
         RCPR_SYM(resource)* x) { \
             return LIBSAT_SYM(libsat_ast_node_resource_release)(x); } \
