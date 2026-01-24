@@ -21,6 +21,24 @@ extern "C" {
 /******************************************************************************/
 
 /**
+ * \brief Create an AST node from a variable name.
+ *
+ * \param node          Pointer to receive the node on success.
+ * \param context       The \ref libsat_context for this operation.
+ * \param var_name      Name of the variable.
+ * \param mode          Variable lookup mode.
+ *                      @see \ref libsat_context_variable_get_flags.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_node_create_from_variable)(
+    LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
+    const char* var_name, int mode);
+
+/**
  * \brief Release a \ref libsat_ast_node resource.
  *
  * \param r             The resource to release.
