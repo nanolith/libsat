@@ -38,6 +38,10 @@ LIBSAT_SYM(libsat_ast_node_resource_release)(
 /******************************************************************************/
 #define __INTERNAL_LIBSAT_IMPORT_parser_internal_sym(sym) \
     LIBSAT_BEGIN_EXPORT \
+    static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_ast_node_resource_release( \
+        RCPR_SYM(resource)* x) { \
+            return LIBSAT_SYM(libsat_ast_node_resource_release)(x); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_parser_internal_as(sym) \
