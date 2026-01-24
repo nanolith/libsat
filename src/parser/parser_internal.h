@@ -80,6 +80,13 @@ LIBSAT_SYM(libsat_ast_node_resource_release)(
             return \
                 LIBSAT_SYM(libsat_ast_node_create_from_variable)(w,x,y,z); } \
     static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_ast_node_create_from_boolean_literal( \
+        RCPR_SYM(libsat_ast_node)** x, LIBSAT_SYM(libsat_context)* y, \
+        bool z) { \
+            return \
+                LIBSAT_SYM(libsat_ast_node_create_from_boolean_literal)( \
+                    x,y,z); } \
+    static inline status FN_DECL_MUST_CHECK \
     sym ## libsat_ast_node_resource_release( \
         RCPR_SYM(resource)* x) { \
             return LIBSAT_SYM(libsat_ast_node_resource_release)(x); } \
