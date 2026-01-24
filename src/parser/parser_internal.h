@@ -20,6 +20,19 @@ extern "C" {
 /* Start of private constructors.                                             */
 /******************************************************************************/
 
+/**
+ * \brief Release a \ref libsat_ast_node resource.
+ *
+ * \param r             The resource to release.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_node_resource_release)(
+    RCPR_SYM(resource)* r);
+
 /******************************************************************************/
 /* Start of private exports.                                                  */
 /******************************************************************************/
