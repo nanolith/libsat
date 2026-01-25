@@ -51,7 +51,8 @@ LIBSAT_SYM(libsat_ast_node_create_as_assignment)(
     /* the left-hand side must be a variable. */
     if (LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE != lhs->type)
     {
-        return ERROR_LIBSAT_PARSER_LEFT_HAND_SIDE_MUST_BE_VARIABLE;
+        retval = ERROR_LIBSAT_PARSER_LEFT_HAND_SIDE_MUST_BE_VARIABLE;
+        goto done;
     }
 
     /* allocate memory for the node. */
