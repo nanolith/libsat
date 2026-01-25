@@ -73,6 +73,27 @@ LIBSAT_SYM(libsat_ast_node_create_as_negation)(
     LIBSAT_SYM(libsat_ast_node)* child);
 
 /**
+ * \brief Create an AST node from as a conjunction of two nodes.
+ *
+ * \param node          Pointer to receive the node on success.
+ * \param context       The \ref libsat_context for this operation.
+ * \param lhs           The left-hand side of the conjunction. Note that this
+ *                      node takes ownership of this left-hand-side node on
+ *                      success.
+ * \param rhs           The right-hand side of the conjunction. Note that this
+ *                      node takes ownership of this right-hand-side node on
+ *                      success.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_node_create_as_conjunction)(
+    LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
+    LIBSAT_SYM(libsat_ast_node)* lhs, LIBSAT_SYM(libsat_ast_node)* rhs);
+
+/**
  * \brief Release a \ref libsat_ast_node resource.
  *
  * \param r             The resource to release.
