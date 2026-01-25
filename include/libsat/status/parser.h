@@ -28,3 +28,9 @@
  */
 #define ERROR_LIBSAT_PARSER_UNSUPPORTED_AST_NODE_TYPE \
     STATUS_CODE(1, LIBSAT_COMPONENT_PARSER, 0x0002)
+
+/**
+ * \brief The left-hand side of a given assignment must be a variable.
+ */
+#define ERROR_LIBSAT_PARSER_LEFT_HAND_SIDE_MUST_BE_VARIABLE \
+    STATUS_CODE(1, LIBSAT_COMPONENT_PARSER, 0x0003)
