@@ -337,6 +337,10 @@ LIBSAT_SYM(libsat_ast_list_node_push)(
     sym ## libsat_ast_node_resource_release( \
         RCPR_SYM(resource)* x) { \
             return LIBSAT_SYM(libsat_ast_node_resource_release)(x); } \
+    static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_ast_list_node_push( \
+        LIBSAT_SYM(libsat_ast_node)* x, LIBSAT_SYM(libsat_ast_node)* y) { \
+            return LIBSAT_SYM(libsat_ast_list_node_push)(x,y); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_parser_internal_as(sym) \
