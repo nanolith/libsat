@@ -244,6 +244,25 @@ LIBSAT_SYM(libsat_ast_node_resource_release)(
     RCPR_SYM(resource)* r);
 
 /******************************************************************************/
+/* Start of private methods.                                                  */
+/******************************************************************************/
+
+/**
+ * \brief Push an AST node onto the list.
+ *
+ * \param list_node     The list node for this operation.
+ * \param child         The child node to push onto the list. Note that the list
+ *                      node takes ownership of this child node on success.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_list_node_push)(
+    LIBSAT_SYM(libsat_ast_node)* list_node, LIBSAT_SYM(libsat_ast_node)* child);
+
+/******************************************************************************/
 /* Start of private exports.                                                  */
 /******************************************************************************/
 #define __INTERNAL_LIBSAT_IMPORT_parser_internal_sym(sym) \
