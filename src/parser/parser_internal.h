@@ -92,20 +92,20 @@ LIBSAT_SYM(libsat_ast_node_resource_release)(
     LIBSAT_BEGIN_EXPORT \
     static inline status FN_DECL_MUST_CHECK \
     sym ## libsat_ast_node_create_from_variable( \
-        LIBSAT_SYM(libsat_ast_node)** w, LIBSAT_SYM(libsat_context)* x \
+        LIBSAT_SYM(libsat_ast_node)** w, LIBSAT_SYM(libsat_context)* x, \
         const char* y, int z) { \
             return \
                 LIBSAT_SYM(libsat_ast_node_create_from_variable)(w,x,y,z); } \
     static inline status FN_DECL_MUST_CHECK \
     sym ## libsat_ast_node_create_from_boolean_literal( \
-        RCPR_SYM(libsat_ast_node)** x, LIBSAT_SYM(libsat_context)* y, \
+        LIBSAT_SYM(libsat_ast_node)** x, LIBSAT_SYM(libsat_context)* y, \
         bool z) { \
             return \
                 LIBSAT_SYM(libsat_ast_node_create_from_boolean_literal)( \
                     x,y,z); } \
     static inline status FN_DECL_MUST_CHECK \
     sym ## libsat_ast_node_create_as_negation( \
-        RCPR_SYM(libsat_ast_node)** x, LIBSAT_SYM(libsat_context)* y \
+        LIBSAT_SYM(libsat_ast_node)** x, LIBSAT_SYM(libsat_context)* y, \
         LIBSAT_SYM(libsat_ast_node)* z) { \
             return LIBSAT_SYM(libsat_ast_node_create_as_negation)(x,y,z); } \
     static inline status FN_DECL_MUST_CHECK \
