@@ -217,6 +217,20 @@ LIBSAT_SYM(libsat_ast_node_create_as_statement)(
     LIBSAT_SYM(libsat_ast_node)* child);
 
 /**
+ * \brief Create an AST node as an empty list.
+ *
+ * \param node          Pointer to receive the node on success.
+ * \param context       The \ref libsat_context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_node_create_as_list)(
+    LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context);
+
+/**
  * \brief Release a \ref libsat_ast_node resource.
  *
  * \param r             The resource to release.
