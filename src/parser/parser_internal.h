@@ -200,6 +200,23 @@ LIBSAT_SYM(libsat_ast_node_create_as_assignment)(
     LIBSAT_SYM(libsat_ast_node)* lhs, LIBSAT_SYM(libsat_ast_node)* rhs);
 
 /**
+ * \brief Create an AST node from as a statement wrapping  the given node.
+ *
+ * \param node          Pointer to receive the node on success.
+ * \param context       The \ref libsat_context for this operation.
+ * \param child         The child node that is wrapped. Note that this node
+ *                      takes ownership of this child node on success.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_node_create_as_statement)(
+    LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
+    LIBSAT_SYM(libsat_ast_node)* child);
+
+/**
  * \brief Release a \ref libsat_ast_node resource.
  *
  * \param r             The resource to release.
