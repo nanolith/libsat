@@ -178,6 +178,28 @@ LIBSAT_SYM(libsat_ast_node_create_as_biconditional)(
     LIBSAT_SYM(libsat_ast_node)* lhs, LIBSAT_SYM(libsat_ast_node)* rhs);
 
 /**
+ * \brief Create an AST node from as an assignment of the left-hand-side
+ * variable to the right-hand-side expression.
+ *
+ * \param node          Pointer to receive the node on success.
+ * \param context       The \ref libsat_context for this operation.
+ * \param lhs           The left-hand side of the assignment. This must be a
+ *                      variable. Note that this node takes ownership of this
+ *                      left-hand-side node on success.
+ * \param rhs           The right-hand side of the assignment. Note that this
+ *                      node takes ownership of this right-hand-side node on
+ *                      success.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+status FN_DECL_MUST_CHECK
+LIBSAT_SYM(libsat_ast_node_create_as_assignment)(
+    LIBSAT_SYM(libsat_ast_node)** node, LIBSAT_SYM(libsat_context)* context,
+    LIBSAT_SYM(libsat_ast_node)* lhs, LIBSAT_SYM(libsat_ast_node)* rhs);
+
+/**
  * \brief Release a \ref libsat_ast_node resource.
  *
  * \param r             The resource to release.
