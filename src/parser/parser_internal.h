@@ -184,6 +184,13 @@ LIBSAT_SYM(libsat_ast_node_resource_release)(
             return \
                 LIBSAT_SYM(libsat_ast_node_create_as_disjunction)(w,x,y,z); } \
     static inline status FN_DECL_MUST_CHECK \
+    sym ## libsat_ast_node_create_as_exclusive_disjunction( \
+        LIBSAT_SYM(libsat_ast_node)** w, LIBSAT_SYM(libsat_context)* x, \
+        LIBSAT_SYM(libsat_ast_node)* y, LIBSAT_SYM(libsat_ast_node)* z) { \
+            return \
+                LIBSAT_SYM(libsat_ast_node_create_as_exclusive_disjunction)( \
+                    w,x,y,z); } \
+    static inline status FN_DECL_MUST_CHECK \
     sym ## libsat_ast_node_resource_release( \
         RCPR_SYM(resource)* x) { \
             return LIBSAT_SYM(libsat_ast_node_resource_release)(x); } \
