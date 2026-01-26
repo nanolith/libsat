@@ -34,3 +34,9 @@
  */
 #define ERROR_LIBSAT_PARSER_LEFT_HAND_SIDE_MUST_BE_VARIABLE \
     STATUS_CODE(1, LIBSAT_COMPONENT_PARSER, 0x0003)
+
+/**
+ * \brief The child node for a push operation must be a statement.
+ */
+#define ERROR_LIBSAT_PARSER_CHILD_MUST_BE_STATEMENT \
+    STATUS_CODE(1, LIBSAT_COMPONENT_PARSER, 0x0004)
