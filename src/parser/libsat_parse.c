@@ -35,6 +35,10 @@ static status parse_statement_from_variable(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_variable(
     libsat_ast_node** node, parser_context* context);
+static status parse_statement_from_negation(
+    libsat_ast_node** node, parser_context* context);
+static status parse_expression_from_negation(
+    libsat_ast_node** node, parser_context* context);
 
 /**
  * \brief Parse an input string.
@@ -80,6 +84,10 @@ LIBSAT_SYM(libsat_parse)(
 
         case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
             retval = parse_statement_from_variable(&tmp, &parser);
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_NEGATION:
+            retval = parse_statement_from_negation(&tmp, &parser);
             break;
 
         default:
@@ -218,6 +226,117 @@ static status parse_expression_from_variable(
 
 cleanup_tmp:
     release_retval = resource_release(&tmp->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Parse a statement starting with a negation.
+ *
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_statement_from_negation(
+    libsat_ast_node** node, parser_context* context)
+{
+    status retval, release_retval;
+    libsat_ast_node* expr;
+    libsat_ast_node* stmt;
+
+    /* parse an expression from this negation. */
+    retval = parse_expression_from_negation(&expr, context);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* create a statement from this expression. */
+    retval = libsat_ast_node_create_as_statement(&stmt, context->context, expr);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_expr;
+    }
+
+    /* success. */
+    *node = stmt;
+    retval = STATUS_SUCCESS;
+    goto done;
+
+cleanup_expr:
+    release_retval = resource_release(&expr->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Parse an expression starting with a negation.
+ *
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_expression_from_negation(
+    libsat_ast_node** node, parser_context* context)
+{
+    status retval, release_retval;
+    libsat_ast_node* tmp;
+    libsat_ast_node* subexpr;
+    int next_token;
+
+    /* read the next token from the scanner. */
+    next_token = libsat_scanner_read_token(&context->details, context->scanner);
+
+    switch (next_token)
+    {
+        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
+            retval = ERROR_LIBSAT_PARSER_INCOMPLETE_EXPRESSION;
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
+            retval = parse_expression_from_variable(&subexpr, context);
+            break;
+
+        default:
+            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
+            break;
+    }
+
+    /* decode response. */
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* wrap this in a negation. */
+    retval =
+        libsat_ast_node_create_as_negation(&tmp, context->context, subexpr);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_subexpr;
+    }
+
+    /* success. */
+    *node = tmp;
+    retval = STATUS_SUCCESS;
+    goto done;
+
+cleanup_subexpr:
+    release_retval = resource_release(&subexpr->hdr);
     if (STATUS_SUCCESS != release_retval)
     {
         retval = release_retval;
