@@ -252,7 +252,8 @@ LIBSAT_SYM(libsat_ast_node_resource_release)(
  *
  * \param list_node     The list node for this operation.
  * \param child         The child node to push onto the list. Note that the list
- *                      node takes ownership of this child node on success.
+ *                      node takes ownership of this child node on success. This
+ *                      node must be a statement.
  *
  * \returns a status code indicating success or failure.
  *      - STATUS_SUCCESS on success.
