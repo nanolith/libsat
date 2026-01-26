@@ -71,7 +71,7 @@ struct LIBSAT_SYM(libsat_ast_node)
     int type;
     union {
         /** \brief variable index. */
-        int variable_index;
+        size_t variable_index;
 
         /** \brief boolean literal. */
         bool boolean_literal;
