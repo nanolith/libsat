@@ -31,6 +31,7 @@ typedef struct parser_context
     const char* input;
 } parser_context;
 
+static status create_variable(libsat_ast_node** node, parser_context* context);
 static status parse_statement_from_variable(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_variable(
@@ -119,6 +120,50 @@ done:
 }
 
 /**
+ * \brief Create a variable from the scanned variable.
+ *
+ * \param node              Pointer to the node pointer to hold this node on
+ *                          success.
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status create_variable(libsat_ast_node** node, parser_context* context)
+{
+    status retval;
+    char var_name[1024];
+
+    /* calculate the total length of the ASCII-Z string. */
+    size_t string_size =
+        ((context->details.end_index+1) - context->details.begin_index) + 1;
+
+    /* if this string size is larger than the variable name, then this is an
+      * error. */
+    if (string_size > sizeof(var_name))
+    {
+        retval = ERROR_LIBSAT_PARSER_VARIABLE_NAME_TOO_LARGE;
+        goto done;
+    }
+
+    /* create an ASCII-Z variable name. */
+    memcpy(
+        var_name, context->input + context->details.begin_index,
+        string_size - 1);
+    var_name[string_size] = 0;
+
+    /* create the AST node instance based on the parsed variable. */
+    retval =
+        libsat_ast_node_create_from_variable(
+            node, context->context, var_name, LIBSAT_VARIABLE_GET_DEFAULT);
+    goto done;
+
+done:
+    return retval;
+}
+
+/**
  * \brief Parse a statement starting with a variable.
  *
  * \param context           The parser context for this operation.
@@ -177,32 +222,11 @@ static status parse_expression_from_variable(
     libsat_ast_node** node, parser_context* context)
 {
     status retval, release_retval;
-    char var_name[1024];
     libsat_ast_node* tmp;
     int next_token;
 
-    /* calculate the total length of the ASCII-Z string. */
-    size_t string_size =
-        ((context->details.end_index+1) - context->details.begin_index) + 1;
-
-    /* if this string size is larger than the variable name, then this is an
-      * error. */
-    if (string_size > sizeof(var_name))
-    {
-        retval = ERROR_LIBSAT_PARSER_VARIABLE_NAME_TOO_LARGE;
-        goto done;
-    }
-
-    /* create an ASCII-Z variable name. */
-    memcpy(
-        var_name, context->input + context->details.begin_index,
-        string_size - 1);
-    var_name[string_size] = 0;
-
-    /* create the AST node instance based on the parsed variable. */
-    retval =
-        libsat_ast_node_create_from_variable(
-            &tmp, context->context, var_name, LIBSAT_VARIABLE_GET_DEFAULT);
+    /* shift this variable. */
+    retval = create_variable(&tmp, context);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
