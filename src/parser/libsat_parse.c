@@ -438,27 +438,9 @@ static status parse_expression_from_conjunction(
     status retval, release_retval;
     libsat_ast_node* tmp;
     libsat_ast_node* rhs;
-    int next_token;
 
-    /* read the next token from the scanner. */
-    next_token = libsat_scanner_read_token(&context->details, context->scanner);
-
-    switch (next_token)
-    {
-        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
-            retval = ERROR_LIBSAT_PARSER_INCOMPLETE_EXPRESSION;
-            break;
-
-        case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
-            retval = create_variable(&rhs, context);
-            break;
-
-        default:
-            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
-            break;
-    }
-
-    /* decode result. */
+    /* parse the next expression. */
+    retval = parse_expression(&rhs, context);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
@@ -474,7 +456,8 @@ static status parse_expression_from_conjunction(
     }
 
     /* read the next token from the scanner. */
-    next_token = libsat_scanner_read_token(&context->details, context->scanner);
+    int next_token =
+        libsat_scanner_read_token(&context->details, context->scanner);
 
     switch (next_token)
     {
