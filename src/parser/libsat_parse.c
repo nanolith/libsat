@@ -31,6 +31,7 @@ typedef struct parser_context
     const char* input;
 } parser_context;
 
+static status parse_expression(libsat_ast_node** node, parser_context* context);
 static status create_variable(libsat_ast_node** node, parser_context* context);
 static status parse_statement_from_variable(
     libsat_ast_node** node, parser_context* context);
@@ -116,6 +117,56 @@ cleanup_scanner:
     {
         retval = release_retval;
     }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Parse an expression.
+ *
+ * \param node              Pointer to the node pointer to hold this expression
+ *                          node on success.
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_expression(libsat_ast_node** node, parser_context* context)
+{
+    status retval;
+    libsat_ast_node* tmp;
+    int next_token;
+
+    /* read the next token from the scanner. */
+    next_token = libsat_scanner_read_token(&context->details, context->scanner);
+
+    switch (next_token)
+    {
+        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
+            retval = ERROR_LIBSAT_PARSER_INCOMPLETE_EXPRESSION;
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
+            retval = parse_expression_from_variable(&tmp, context);
+            break;
+
+        default:
+            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
+            break;
+    }
+
+    /* decode response. */
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* success. */
+    *node = tmp;
+    retval = STATUS_SUCCESS;
+    goto done;
 
 done:
     return retval;
@@ -336,27 +387,9 @@ static status parse_expression_from_negation(
     status retval, release_retval;
     libsat_ast_node* tmp;
     libsat_ast_node* subexpr;
-    int next_token;
 
-    /* read the next token from the scanner. */
-    next_token = libsat_scanner_read_token(&context->details, context->scanner);
-
-    switch (next_token)
-    {
-        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
-            retval = ERROR_LIBSAT_PARSER_INCOMPLETE_EXPRESSION;
-            break;
-
-        case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
-            retval = parse_expression_from_variable(&subexpr, context);
-            break;
-
-        default:
-            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
-            break;
-    }
-
-    /* decode response. */
+    /* read the next expression. */
+    retval = parse_expression(&subexpr, context);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
