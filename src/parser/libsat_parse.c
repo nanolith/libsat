@@ -40,6 +40,8 @@ static status parse_statement_from_negation(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_negation(
     libsat_ast_node** node, parser_context* context);
+static status parse_expression_from_conjunction(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 
 /**
  * \brief Parse an input string.
@@ -241,12 +243,26 @@ static status parse_expression_from_variable(
             /* the variable ends this scan. */
             *node = tmp;
             retval = STATUS_SUCCESS;
-            goto done;
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION:
+            /* create a conjunction expression. */
+            retval = parse_expression_from_conjunction(node, context, tmp);
+            break;
 
         default:
             retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
-            goto cleanup_tmp;
+            break;
     }
+
+    /* decode the result. */
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_tmp;
+    }
+
+    /* success. */
+    goto done;
 
 cleanup_tmp:
     release_retval = resource_release(&tmp->hdr);
@@ -361,6 +377,104 @@ static status parse_expression_from_negation(
 
 cleanup_subexpr:
     release_retval = resource_release(&subexpr->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Attempt to parse an expression from a conjunction operator and a
+ * left-hand-side expression.
+ *
+ * \param node          Pointer to the node pointer to receive this expression
+ *                      on success.
+ * \param context       The context for this operation.
+ * \param lhs           The left-hand-side expression for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_expression_from_conjunction(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs)
+{
+    status retval, release_retval;
+    libsat_ast_node* tmp;
+    libsat_ast_node* rhs;
+    int next_token;
+
+    /* read the next token from the scanner. */
+    next_token = libsat_scanner_read_token(&context->details, context->scanner);
+
+    switch (next_token)
+    {
+        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
+            retval = ERROR_LIBSAT_PARSER_INCOMPLETE_EXPRESSION;
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
+            retval = create_variable(&rhs, context);
+            break;
+
+        default:
+            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
+            break;
+    }
+
+    /* decode result. */
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* create the conjunction. */
+    retval =
+        libsat_ast_node_create_as_conjunction(
+            &tmp, context->context, lhs, rhs);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_rhs;
+    }
+
+    /* read the next token from the scanner. */
+    next_token = libsat_scanner_read_token(&context->details, context->scanner);
+
+    switch (next_token)
+    {
+        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
+            retval = STATUS_SUCCESS;
+            *node = tmp;
+            break;
+
+        default:
+            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
+            break;
+    }
+
+    /* decode the result. */
+    if (STATUS_SUCCESS != retval)
+    {
+        /* the caller maintains ownership of lhs. */
+        tmp->value.binary.lhs = NULL;
+        goto cleanup_tmp;
+    }
+
+    /* success. */
+    goto done;
+
+cleanup_tmp:
+    release_retval = resource_release(&tmp->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+cleanup_rhs:
+    release_retval = resource_release(&rhs->hdr);
     if (STATUS_SUCCESS != release_retval)
     {
         retval = release_retval;
