@@ -32,6 +32,8 @@ typedef struct parser_context
 } parser_context;
 
 static status parse_expression(libsat_ast_node** node, parser_context* context);
+static status parse_operation(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 static status create_variable(libsat_ast_node** node, parser_context* context);
 static status parse_statement_from_variable(
     libsat_ast_node** node, parser_context* context);
@@ -173,6 +175,48 @@ done:
 }
 
 /**
+ * \brief Parse an optional operation involving the left-hand side.
+ *
+ * \param node              Pointer to the node pointer to hold this expression
+ *                          node on success.
+ * \param context           The parser context for this operation.
+ * \param lhs               The left-hand side of the operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_operation(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs)
+{
+    status retval;
+    int next_token;
+
+    /* read the next token from the scanner. */
+    next_token = libsat_scanner_read_token(&context->details, context->scanner);
+
+    switch (next_token)
+    {
+        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
+            /* the left-hand side expression ends this scan. */
+            *node = lhs;
+            retval = STATUS_SUCCESS;
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION:
+            /* create a conjunction expression. */
+            retval = parse_expression_from_conjunction(node, context, lhs);
+            break;
+
+        default:
+            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
+            break;
+    }
+
+    return retval;
+}
+
+/**
  * \brief Create a variable from the scanned variable.
  *
  * \param node              Pointer to the node pointer to hold this node on
@@ -276,7 +320,6 @@ static status parse_expression_from_variable(
 {
     status retval, release_retval;
     libsat_ast_node* tmp;
-    int next_token;
 
     /* shift this variable. */
     retval = create_variable(&tmp, context);
@@ -285,28 +328,8 @@ static status parse_expression_from_variable(
         goto done;
     }
 
-    /* read the next token from the scanner. */
-    next_token = libsat_scanner_read_token(&context->details, context->scanner);
-
-    switch (next_token)
-    {
-        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
-            /* the variable ends this scan. */
-            *node = tmp;
-            retval = STATUS_SUCCESS;
-            break;
-
-        case LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION:
-            /* create a conjunction expression. */
-            retval = parse_expression_from_conjunction(node, context, tmp);
-            break;
-
-        default:
-            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
-            break;
-    }
-
-    /* decode the result. */
+    /* fold this variable into the next operation. */
+    retval = parse_operation(node, context, tmp);
     if (STATUS_SUCCESS != retval)
     {
         goto cleanup_tmp;
