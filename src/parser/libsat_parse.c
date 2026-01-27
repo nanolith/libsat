@@ -478,23 +478,8 @@ static status parse_expression_from_conjunction(
         goto cleanup_rhs;
     }
 
-    /* read the next token from the scanner. */
-    int next_token =
-        libsat_scanner_read_token(&context->details, context->scanner);
-
-    switch (next_token)
-    {
-        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
-            retval = STATUS_SUCCESS;
-            *node = tmp;
-            break;
-
-        default:
-            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
-            break;
-    }
-
-    /* decode the result. */
+    /* fold this conjunction into the next operation. */
+    retval = parse_operation(node, context, tmp);
     if (STATUS_SUCCESS != retval)
     {
         /* the caller maintains ownership of lhs. */
