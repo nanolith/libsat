@@ -25,7 +25,7 @@ enum LIBSAT_SYM(libsat_operator_priority)
     LIBSAT_OPERATOR_PRIORITY_EXCLUSIVE_DISJUNCITON                      = 3,
     LIBSAT_OPERATOR_PRIORITY_DISJUNCITON                                = 4,
     LIBSAT_OPERATOR_PRIORITY_IMPLICATION                                = 5,
-    LIBSAT_OPERATOR_PRIORITY_EQUIVALENCE                                = 6,
+    LIBSAT_OPERATOR_PRIORITY_BICONDITIONAL                              = 6,
 };
 
 /******************************************************************************/
