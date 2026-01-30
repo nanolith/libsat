@@ -37,6 +37,7 @@ enum LIBSAT_SYM(libsat_operator_priority)
 enum LIBSAT_SYM(libsat_operator_associativity)
 {
     LIBSAT_ASSOC_LEFT                                                   = 0,
+    LIBSAT_ASSOC_RIGHT                                                  = 1,
 };
 
 /******************************************************************************/
