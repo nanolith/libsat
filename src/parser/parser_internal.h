@@ -17,6 +17,11 @@
 extern "C" {
 # endif /*__cplusplus*/
 
+enum LIBSAT_SYM(libsat_operator_priority)
+{
+    LIBSAT_OPERATOR_PRIORITY_NEGATION = 1,
+};
+
 /******************************************************************************/
 /* Start of private constructors.                                             */
 /******************************************************************************/
