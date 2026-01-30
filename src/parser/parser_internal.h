@@ -31,6 +31,14 @@ enum LIBSAT_SYM(libsat_operator_priority)
     LIBSAT_OPERATOR_PRIORITY_BICONDITIONAL                              = 6,
 };
 
+/**
+ * \brief Associativity types.
+ */
+enum LIBSAT_SYM(libsat_operator_associativity)
+{
+    LIBSAT_ASSOC_LEFT                                                   = 0,
+};
+
 /******************************************************************************/
 /* Start of private constructors.                                             */
 /******************************************************************************/
