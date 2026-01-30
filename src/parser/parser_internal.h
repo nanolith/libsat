@@ -17,6 +17,9 @@
 extern "C" {
 # endif /*__cplusplus*/
 
+/**
+ * \brief List of operator priorities in order.
+ */
 enum LIBSAT_SYM(libsat_operator_priority)
 {
     LIBSAT_OPERATOR_PRIORITY_PARENTHESES                                = 0,
