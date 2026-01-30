@@ -364,6 +364,8 @@ bool LIBSAT_SYM(should_combine_left)(int left, int right);
     sym ## libsat_ast_list_node_push( \
         LIBSAT_SYM(libsat_ast_node)* x, LIBSAT_SYM(libsat_ast_node)* y) { \
             return LIBSAT_SYM(libsat_ast_list_node_push)(x,y); } \
+    static inline bool sym ## should_combine_left(int x, int y) { \
+        return LIBSAT_SYM(should_combine_left)(x,y); } \
     LIBSAT_END_EXPORT \
     REQUIRE_SEMICOLON_HERE
 #define LIBSAT_IMPORT_parser_internal_as(sym) \
