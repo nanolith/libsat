@@ -21,6 +21,7 @@ enum LIBSAT_SYM(libsat_operator_priority)
 {
     LIBSAT_OPERATOR_PRIORITY_NEGATION                                   = 1,
     LIBSAT_OPERATOR_PRIORITY_CONJUNCTION                                = 2,
+    LIBSAT_OPERATOR_PRIORITY_EXCLUSIVE_DISJUNCITON                      = 3,
 };
 
 /******************************************************************************/
