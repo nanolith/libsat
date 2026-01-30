@@ -274,6 +274,17 @@ status FN_DECL_MUST_CHECK
 LIBSAT_SYM(libsat_ast_list_node_push)(
     LIBSAT_SYM(libsat_ast_node)* list_node, LIBSAT_SYM(libsat_ast_node)* child);
 
+/**
+ * \brief Given two operator tokens, return true if the parser should combine to
+ * the left, and false otherwise.
+ *
+ * \param left          The operator token to the left.
+ * \param right         The operator token to the right.
+ *
+ * \returns true if the parser should combine to the left and false otherwise.
+ */
+bool LIBSAT_SYM(should_combine_left)(int left, int right);
+
 /******************************************************************************/
 /* Start of private exports.                                                  */
 /******************************************************************************/
