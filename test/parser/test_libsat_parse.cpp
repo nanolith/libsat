@@ -17,6 +17,8 @@ LIBSAT_IMPORT_parser;
 RCPR_IMPORT_allocator;
 RCPR_IMPORT_resource;
 
+TEST_SUITE(libsat_parse);
+
 /**
  * Attempting to parse an empty string returns ERROR_LIBSAT_PARSER_EMPTY_INPUT.
  */
