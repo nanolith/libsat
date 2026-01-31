@@ -248,7 +248,7 @@ static status create_variable(libsat_ast_node** node, parser_context* context)
     memcpy(
         var_name, context->input + context->details.begin_index,
         string_size - 1);
-    var_name[string_size] = 0;
+    var_name[string_size - 1] = 0;
 
     /* create the AST node instance based on the parsed variable. */
     retval =
