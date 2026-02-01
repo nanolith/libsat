@@ -676,6 +676,9 @@ static status parse_expression_from_conjunction(
         goto cleanup_rhs;
     }
 
+    /* rhs is now owned by tmp. */
+    rhs = NULL;
+
     /* fold this conjunction into the next operation. */
     retval = parse_operation(node, context, tmp);
     if (STATUS_SUCCESS != retval)
@@ -696,10 +699,13 @@ cleanup_tmp:
     }
 
 cleanup_rhs:
-    release_retval = resource_release(&rhs->hdr);
-    if (STATUS_SUCCESS != release_retval)
+    if (NULL != rhs)
     {
-        retval = release_retval;
+        release_retval = resource_release(&rhs->hdr);
+        if (STATUS_SUCCESS != release_retval)
+        {
+            retval = release_retval;
+        }
     }
 
 done:
