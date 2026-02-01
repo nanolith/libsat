@@ -31,14 +31,17 @@ typedef struct parser_context
     const char* input;
 } parser_context;
 
-static status parse_expression(libsat_ast_node** node, parser_context* context);
+static bool token_is_binary_operator(int token);
+static bool next_operation_binds_tighter(parser_context* context, int token);
+static status parse_expression(
+    libsat_ast_node** node, parser_context* context, int left_operator);
 static status parse_operation(
     libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 static status create_variable(libsat_ast_node** node, parser_context* context);
 static status parse_statement_from_variable(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_variable(
-    libsat_ast_node** node, parser_context* context);
+    libsat_ast_node** node, parser_context* context, int left_operator);
 static status parse_statement_from_negation(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_negation(
@@ -127,17 +130,62 @@ done:
 }
 
 /**
+ * \brief Returns true if the token is a binary operator.
+ *
+ * \param token             The token to check.
+ *
+ * \returns true if this is a binary operator and false otherwise.
+ */
+static bool token_is_binary_operator(int token)
+{
+    switch (token)
+    {
+        case LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION:
+        case LIBSAT_SCANNER_TOKEN_TYPE_EXCLUSIVE_DISJUNCTION:
+        case LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION:
+        case LIBSAT_SCANNER_TOKEN_TYPE_IMPLICATION:
+        case LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+/**
+ * \brief Peek at the next token; return true if the next token is an operator
+ * and it has higher priority than the given token.
+ *
+ * \param context           The parser context for this predicate.
+ * \param token             The current (left-hand) token to check against.
+ *
+ * \returns true if the next token is an operator with tighter binding.
+ */
+static bool next_operation_binds_tighter(parser_context* context, int token)
+{
+    libsat_scanner_token details;
+
+    int right_token = libsat_scanner_peek_token(&details, context->scanner);
+
+    return
+        token_is_binary_operator(right_token)
+     && !should_combine_left(token, right_token);
+}
+
+/**
  * \brief Parse an expression.
  *
  * \param node              Pointer to the node pointer to hold this expression
  *                          node on success.
  * \param context           The parser context for this operation.
+ * \param left_operator     The left-hand operator for lookahead.
  *
  * \returns a status code indicating success or failure.
  *      - STATUS_SUCCESS on success.
  *      - a non-zero error code on failure.
  */
-static status parse_expression(libsat_ast_node** node, parser_context* context)
+static status parse_expression(
+    libsat_ast_node** node, parser_context* context, int left_operator)
 {
     status retval;
     libsat_ast_node* tmp;
@@ -153,7 +201,8 @@ static status parse_expression(libsat_ast_node** node, parser_context* context)
             break;
 
         case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
-            retval = parse_expression_from_variable(&tmp, context);
+            retval =
+                parse_expression_from_variable(&tmp, context, left_operator);
             break;
 
         default:
@@ -284,7 +333,9 @@ static status parse_statement_from_variable(
     libsat_ast_node* stmt;
 
     /* parse an expression from this variable. */
-    retval = parse_expression_from_variable(&expr, context);
+    retval =
+        parse_expression_from_variable(
+            &expr, context, LIBSAT_SCANNER_TOKEN_TYPE_NOP);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
@@ -316,14 +367,17 @@ done:
 /**
  * \brief Parse an expression starting with a variable.
  *
+ * \param node              Pointer to the node pointer to store the parsed node
+ *                          on success.
  * \param context           The parser context for this operation.
+ * \param left_operator     The left-hand-side operator for lookahead.
  *
  * \returns a status code indicating success or failure.
  *      - STATUS_SUCCESS on success.
  *      - a non-zero error code on failure.
  */
 static status parse_expression_from_variable(
-    libsat_ast_node** node, parser_context* context)
+    libsat_ast_node** node, parser_context* context, int left_operator)
 {
     status retval, release_retval;
     libsat_ast_node* tmp;
@@ -335,11 +389,19 @@ static status parse_expression_from_variable(
         goto done;
     }
 
-    /* fold this variable into the next operation. */
-    retval = parse_operation(node, context, tmp);
-    if (STATUS_SUCCESS != retval)
+    /* is the next operator tighter binding than the previous one? */
+    if (next_operation_binds_tighter(context, left_operator))
     {
-        goto cleanup_tmp;
+        /* fold this variable into the next operation. */
+        retval = parse_operation(node, context, tmp);
+        if (STATUS_SUCCESS != retval)
+        {
+            goto cleanup_tmp;
+        }
+    }
+    else
+    {
+        *node = tmp;
     }
 
     /* success. */
@@ -419,7 +481,7 @@ static status parse_expression_from_negation(
     libsat_ast_node* subexpr;
 
     /* read the next expression. */
-    retval = parse_expression(&subexpr, context);
+    retval = parse_expression(&subexpr, context, 0);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
@@ -470,10 +532,24 @@ static status parse_expression_from_conjunction(
     libsat_ast_node* rhs;
 
     /* parse the next expression. */
-    retval = parse_expression(&rhs, context);
+    retval =
+        parse_expression(&rhs, context, LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
+    }
+
+    /* fold this right-hand-side into the more tightly binding operation. */
+    if (
+        next_operation_binds_tighter(
+            context, LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION))
+    {
+        /* fold this next expression into this operation. */
+        retval = parse_operation(&rhs, context, rhs);
+        if (STATUS_SUCCESS != retval)
+        {
+            goto cleanup_rhs;
+        }
     }
 
     /* create the conjunction. */
@@ -536,10 +612,24 @@ static status parse_expression_from_disjunction(
     libsat_ast_node* rhs;
 
     /* parse the next expression. */
-    retval = parse_expression(&rhs, context);
+    retval =
+        parse_expression(&rhs, context, LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
+    }
+
+    /* fold this right-hand-side into the more tightly binding operation. */
+    if (
+        next_operation_binds_tighter(
+            context, LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION))
+    {
+        /* fold this next expression into this operation. */
+        retval = parse_operation(&rhs, context, rhs);
+        if (STATUS_SUCCESS != retval)
+        {
+            goto cleanup_rhs;
+        }
     }
 
     /* create the conjunction. */
