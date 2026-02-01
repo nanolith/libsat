@@ -875,3 +875,88 @@ TEST(simple_statements)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * Parse two conjunction statements.
+ */
+TEST(two_conjunction_statements)
+{
+    allocator* alloc;
+    libsat_context* context;
+    libsat_ast_node* base = nullptr;
+    libsat_ast_node* node = nullptr;
+    libsat_ast_node* list = nullptr;
+    libsat_ast_node* conjunction = nullptr;
+    const char* input = R"(x ∧ y; a ∧ b;)";
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* Parse should succeed. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
+
+    /* the list should not be NULL and should be a statement list. */
+    list = base;
+    TEST_ASSERT(nullptr != list);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == list->type);
+    TEST_ASSERT(NULL != list->value.list.head);
+
+    /* the first node of the list should be a statement. */
+    node = list->value.list.head;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
+    TEST_ASSERT(NULL != node->value.unary);
+
+    /* the child of this node should be a conjunction. */
+    conjunction = node->value.unary;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_CONJUNCTION == conjunction->type);
+    TEST_EXPECT(NULL != conjunction->value.binary.lhs);
+    TEST_EXPECT(NULL != conjunction->value.binary.rhs);
+
+    /* the left-hand-side of this conjunction should be a variable. */
+    node = conjunction->value.binary.lhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE == node->type);
+    TEST_EXPECT(2 == node->value.variable_index);
+
+    /* the right-hand-side of this conjunction should be a variable. */
+    node = conjunction->value.binary.rhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE == node->type);
+    TEST_EXPECT(3 == node->value.variable_index);
+
+    /* the second node of the list should be a statement. */
+    node = list->value.list.head->next;
+    TEST_ASSERT(NULL != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
+    TEST_ASSERT(NULL != node->value.unary);
+
+    /* the child of this node should be a conjunction. */
+    conjunction = node->value.unary;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_CONJUNCTION == conjunction->type);
+    TEST_EXPECT(NULL != conjunction->value.binary.lhs);
+    TEST_EXPECT(NULL != conjunction->value.binary.rhs);
+
+    /* the left-hand-side of this conjunction should be a variable. */
+    node = conjunction->value.binary.lhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE == node->type);
+    TEST_EXPECT(0 == node->value.variable_index);
+
+    /* the right-hand-side of this conjunction should be a variable. */
+    node = conjunction->value.binary.rhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE == node->type);
+    TEST_EXPECT(1 == node->value.variable_index);
+
+    /* there should be no third node of this list. */
+    TEST_EXPECT(NULL == list->value.list.head->next->next);
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_ast_node_resource_handle(base)));
+    TEST_ASSERT(
+        STATUS_SUCCESS ==
+            resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
