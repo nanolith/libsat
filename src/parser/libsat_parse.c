@@ -124,10 +124,13 @@ LIBSAT_SYM(libsat_parse)(
     {
         *node = list;
         retval = STATUS_SUCCESS;
+        goto cleanup_scanner;
     }
-
-    /* in either case, clean up. */
-    goto cleanup_scanner;
+    else
+    {
+        /* this is an error condition; clean up nodes. */
+        goto cleanup_list;
+    }
 
 cleanup_list:
     if (NULL != list)
