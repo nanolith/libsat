@@ -33,6 +33,7 @@ typedef struct parser_context
 
 static bool token_is_binary_operator(int token);
 static bool next_operation_binds_tighter(parser_context* context, int token);
+static status parse_statement(libsat_ast_node** node, parser_context* context);
 static status parse_expression(
     libsat_ast_node** node, parser_context* context, int left_operator);
 static status parse_operation(
@@ -74,7 +75,6 @@ LIBSAT_SYM(libsat_parse)(
     const char* input)
 {
     status retval, release_retval;
-    int token;
     parser_context parser;
     libsat_ast_node* tmp;
 
@@ -90,29 +90,8 @@ LIBSAT_SYM(libsat_parse)(
         goto done;
     }
 
-    /* read the first token. */
-    token = libsat_scanner_read_token(&parser.details, parser.scanner);
-
-    switch (token)
-    {
-        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
-            retval = ERROR_LIBSAT_PARSER_EMPTY_INPUT;
-            break;
-
-        case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
-            retval = parse_statement_from_variable(&tmp, &parser);
-            break;
-
-        case LIBSAT_SCANNER_TOKEN_TYPE_NEGATION:
-            retval = parse_statement_from_negation(&tmp, &parser);
-            break;
-
-        default:
-            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
-            break;
-    }
-
-    /* if the parse failed, clean up. */
+    /* read a statement. */
+    retval = parse_statement(&tmp, &parser);
     if (STATUS_SUCCESS != retval)
     {
         goto cleanup_scanner;
@@ -130,6 +109,60 @@ cleanup_scanner:
     {
         retval = release_retval;
     }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Parse a statement.
+ *
+ * \param node              Pointer to the node pointer set to the parsed
+ *                          statement on success.
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_statement(libsat_ast_node** node, parser_context* context)
+{
+    status retval;
+    libsat_ast_node* tmp;
+    int token;
+
+    /* read the first token of the statement. */
+    token = libsat_scanner_read_token(&context->details, context->scanner);
+
+    switch (token)
+    {
+        case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
+            retval = ERROR_LIBSAT_PARSER_EMPTY_INPUT;
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
+            retval = parse_statement_from_variable(&tmp, context);
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_NEGATION:
+            retval = parse_statement_from_negation(&tmp, context);
+            break;
+
+        default:
+            retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
+            break;
+    }
+
+    /* if the parse failed, clean up. */
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* parse success. */
+    *node = tmp;
+    retval = STATUS_SUCCESS;
+    goto done;
 
 done:
     return retval;
