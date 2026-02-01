@@ -342,6 +342,7 @@ static status parse_operation(
 
     switch (next_token)
     {
+        case LIBSAT_SCANNER_TOKEN_TYPE_SEMICOLON:
         case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
             /* the left-hand side expression ends this scan. */
             *node = lhs;
