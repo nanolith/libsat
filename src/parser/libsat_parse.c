@@ -45,6 +45,8 @@ static status parse_expression_from_negation(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_conjunction(
     libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
+static status parse_expression_from_disjunction(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 
 /**
  * \brief Parse an input string.
@@ -206,6 +208,11 @@ static status parse_operation(
         case LIBSAT_SCANNER_TOKEN_TYPE_CONJUNCTION:
             /* create a conjunction expression. */
             retval = parse_expression_from_conjunction(node, context, lhs);
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION:
+            /* create a disjunction expression. */
+            retval = parse_expression_from_disjunction(node, context, lhs);
             break;
 
         default:
@@ -472,6 +479,72 @@ static status parse_expression_from_conjunction(
     /* create the conjunction. */
     retval =
         libsat_ast_node_create_as_conjunction(
+            &tmp, context->context, lhs, rhs);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_rhs;
+    }
+
+    /* fold this conjunction into the next operation. */
+    retval = parse_operation(node, context, tmp);
+    if (STATUS_SUCCESS != retval)
+    {
+        /* the caller maintains ownership of lhs. */
+        tmp->value.binary.lhs = NULL;
+        goto cleanup_tmp;
+    }
+
+    /* success. */
+    goto done;
+
+cleanup_tmp:
+    release_retval = resource_release(&tmp->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+cleanup_rhs:
+    release_retval = resource_release(&rhs->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Attempt to parse an expression from a disjunction operator and a
+ * left-hand-side expression.
+ *
+ * \param node          Pointer to the node pointer to receive this expression
+ *                      on success.
+ * \param context       The context for this operation.
+ * \param lhs           The left-hand-side expression for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_expression_from_disjunction(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs)
+{
+    status retval, release_retval;
+    libsat_ast_node* tmp;
+    libsat_ast_node* rhs;
+
+    /* parse the next expression. */
+    retval = parse_expression(&rhs, context);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* create the conjunction. */
+    retval =
+        libsat_ast_node_create_as_disjunction(
             &tmp, context->context, lhs, rhs);
     if (STATUS_SUCCESS != retval)
     {
