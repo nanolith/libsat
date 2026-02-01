@@ -68,8 +68,14 @@ TEST(simple_variable_statement)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -110,8 +116,14 @@ TEST(not_variable_statement)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -158,8 +170,14 @@ TEST(simple_conjunction)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -212,8 +230,14 @@ TEST(simple_disjunction)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -267,8 +291,14 @@ TEST(disjunction_conjunction)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(nullptr != node->value.unary);
@@ -333,8 +363,14 @@ TEST(conjunction_disjunction)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(nullptr != node->value.unary);
@@ -399,8 +435,14 @@ TEST(disjunction_of_conjunctions)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(nullptr != node->value.unary);
@@ -475,8 +517,14 @@ TEST(simple_exclusive_disjunction)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -530,8 +578,14 @@ TEST(simple_implication)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -584,8 +638,14 @@ TEST(implication_right_assoc)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -649,8 +709,14 @@ TEST(simple_biconditional)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);
@@ -704,8 +770,14 @@ TEST(implication_negation)
     /* Parse should succeed. */
     TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
 
-    /* the node should not be NULL and should be a statement. */
+    /* the node should not be NULL and should be a statement list. */
     node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
     TEST_ASSERT(nullptr != node);
     TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
     TEST_ASSERT(NULL != node->value.unary);

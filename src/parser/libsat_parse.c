@@ -76,7 +76,8 @@ LIBSAT_SYM(libsat_parse)(
 {
     status retval, release_retval;
     parser_context parser;
-    libsat_ast_node* tmp;
+    libsat_ast_node* list = NULL;
+    libsat_ast_node* tmp = NULL;
 
     /* set up parser context. */
     memset(&parser, 0, sizeof(parser));
@@ -90,17 +91,62 @@ LIBSAT_SYM(libsat_parse)(
         goto done;
     }
 
-    /* read a statement. */
-    retval = parse_statement(&tmp, &parser);
-    if (STATUS_SUCCESS != retval)
+    do
     {
-        goto cleanup_scanner;
+        /* create a statement list if needed. */
+        if (NULL == list && NULL != tmp)
+        {
+            retval = libsat_ast_node_create_as_list(&list, parser.context);
+            if (STATUS_SUCCESS != retval)
+            {
+                goto cleanup_list;
+            }
+        }
+
+        /* push tmp to the list if set. */
+        if (NULL != tmp)
+        {
+            retval = libsat_ast_list_node_push(list, tmp);
+            if (STATUS_SUCCESS != retval)
+            {
+                goto cleanup_list;
+            }
+
+            tmp = NULL;
+        }
+
+        /* read a statement. */
+        retval = parse_statement(&tmp, &parser);
+    } while (STATUS_SUCCESS == retval);
+
+    /* did we read to the end? */
+    if (ERROR_LIBSAT_PARSER_EMPTY_INPUT == retval && NULL != list)
+    {
+        *node = list;
+        retval = STATUS_SUCCESS;
     }
 
-    /* parse success. */
-    *node = tmp;
-    retval = STATUS_SUCCESS;
+    /* in either case, clean up. */
     goto cleanup_scanner;
+
+cleanup_list:
+    if (NULL != list)
+    {
+        release_retval = resource_release(&list->hdr);
+        if (STATUS_SUCCESS != release_retval)
+        {
+            retval = release_retval;
+        }
+    }
+
+    if (NULL != tmp)
+    {
+        release_retval = resource_release(&tmp->hdr);
+        if (STATUS_SUCCESS != release_retval)
+        {
+            retval = release_retval;
+        }
+    }
 
 cleanup_scanner:
     release_retval =
@@ -146,6 +192,10 @@ static status parse_statement(libsat_ast_node** node, parser_context* context)
 
         case LIBSAT_SCANNER_TOKEN_TYPE_NEGATION:
             retval = parse_statement_from_negation(&tmp, context);
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_SEMICOLON:
+            retval = parse_statement(&tmp, context);
             break;
 
         default:
