@@ -640,7 +640,7 @@ static status parse_expression_from_disjunction(
         }
     }
 
-    /* create the conjunction. */
+    /* create the disjunction. */
     retval =
         libsat_ast_node_create_as_disjunction(
             &tmp, context->context, lhs, rhs);
@@ -649,7 +649,7 @@ static status parse_expression_from_disjunction(
         goto cleanup_rhs;
     }
 
-    /* fold this conjunction into the next operation. */
+    /* fold this disjunction into the next operation. */
     retval = parse_operation(node, context, tmp);
     if (STATUS_SUCCESS != retval)
     {
