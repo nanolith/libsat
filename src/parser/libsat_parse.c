@@ -730,7 +730,7 @@ static status parse_expression_from_exclusive_disjunction(
         goto cleanup_rhs;
     }
 
-    /* fold this conjunction into the next operation. */
+    /* fold this exclusive disjunction into the next operation. */
     retval = parse_operation(node, context, tmp);
     if (STATUS_SUCCESS != retval)
     {
