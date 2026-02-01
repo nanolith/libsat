@@ -148,17 +148,23 @@ static status release_binary(libsat_ast_node* node)
     status retval = STATUS_SUCCESS, release_retval;
 
     /* release lhs. */
-    release_retval = resource_release(&(node->value.binary.lhs->hdr));
-    if (STATUS_SUCCESS != release_retval)
+    if (NULL != node->value.binary.lhs)
     {
-        retval = release_retval;
+        release_retval = resource_release(&(node->value.binary.lhs->hdr));
+        if (STATUS_SUCCESS != release_retval)
+        {
+            retval = release_retval;
+        }
     }
 
     /* release rhs. */
-    release_retval = resource_release(&(node->value.binary.rhs->hdr));
-    if (STATUS_SUCCESS != release_retval)
+    if (NULL != node->value.binary.rhs)
     {
-        retval = release_retval;
+        release_retval = resource_release(&(node->value.binary.rhs->hdr));
+        if (STATUS_SUCCESS != release_retval)
+        {
+            retval = release_retval;
+        }
     }
 
     /* return decoded status. */
