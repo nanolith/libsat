@@ -508,3 +508,57 @@ TEST(simple_exclusive_disjunction)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * Parse a simple implication statement.
+ */
+TEST(simple_implication)
+{
+    allocator* alloc;
+    libsat_context* context;
+    libsat_ast_node* base = nullptr;
+    libsat_ast_node* node = nullptr;
+    libsat_ast_node* implication = nullptr;
+    const char* input = R"(a→b)";
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* Parse should succeed. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
+
+    /* the node should not be NULL and should be a statement. */
+    node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
+    TEST_ASSERT(NULL != node->value.unary);
+
+    /* The statement child node should be an implication. */
+    implication = node->value.unary;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_IMPLICATION == implication->type);
+    TEST_ASSERT(NULL != implication->value.binary.lhs);
+    TEST_ASSERT(NULL != implication->value.binary.rhs);
+
+    /* The left-hand side of the implication should be a variable. */
+    node = implication->value.binary.lhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE == node->type);
+    TEST_EXPECT(0 == node->value.variable_index);
+
+    /* The right-hand side of the implication should be a variable. */
+    node = implication->value.binary.rhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_VARIABLE == node->type);
+    TEST_EXPECT(1 == node->value.variable_index);
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_ast_node_resource_handle(base)));
+    TEST_ASSERT(
+        STATUS_SUCCESS ==
+            resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
