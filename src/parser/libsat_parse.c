@@ -45,7 +45,7 @@ static status parse_expression_from_variable(
 static status parse_statement_from_negation(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_negation(
-    libsat_ast_node** node, parser_context* context);
+    libsat_ast_node** node, parser_context* context, int left_operator);
 static status parse_expression_from_conjunction(
     libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 static status parse_expression_from_disjunction(
@@ -209,6 +209,11 @@ static status parse_expression(
         case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
             retval =
                 parse_expression_from_variable(&tmp, context, left_operator);
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_NEGATION:
+            retval =
+                parse_expression_from_negation(&tmp, context, left_operator);
             break;
 
         default:
@@ -457,7 +462,9 @@ static status parse_statement_from_negation(
     libsat_ast_node* stmt;
 
     /* parse an expression from this negation. */
-    retval = parse_expression_from_negation(&expr, context);
+    retval =
+        parse_expression_from_negation(
+            &expr, context, LIBSAT_SCANNER_TOKEN_TYPE_NOP);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
@@ -489,21 +496,24 @@ done:
 /**
  * \brief Parse an expression starting with a negation.
  *
+ * \param node              Pointer to the node pointer to store the parsed node
+ *                          on success.
  * \param context           The parser context for this operation.
+ * \param left_operator     The left-hand operator for lookahead.
  *
  * \returns a status code indicating success or failure.
  *      - STATUS_SUCCESS on success.
  *      - a non-zero error code on failure.
  */
 static status parse_expression_from_negation(
-    libsat_ast_node** node, parser_context* context)
+    libsat_ast_node** node, parser_context* context, int left_operator)
 {
     status retval, release_retval;
     libsat_ast_node* tmp;
     libsat_ast_node* subexpr;
 
     /* read the next expression. */
-    retval = parse_expression(&subexpr, context, 0);
+    retval = parse_expression(&subexpr, context, left_operator);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
