@@ -54,6 +54,8 @@ static status parse_expression_from_exclusive_disjunction(
     libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 static status parse_expression_from_implication(
     libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
+static status parse_expression_from_biconditional(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 
 /**
  * \brief Parse an input string.
@@ -277,6 +279,11 @@ static status parse_operation(
         case LIBSAT_SCANNER_TOKEN_TYPE_IMPLICATION:
             /* create an implication expression. */
             retval = parse_expression_from_implication(node, context, lhs);
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL:
+            /* create a biconditional expression. */
+            retval = parse_expression_from_biconditional(node, context, lhs);
             break;
 
         default:
@@ -818,6 +825,87 @@ static status parse_expression_from_implication(
     }
 
     /* fold this implication into the next operation. */
+    retval = parse_operation(node, context, tmp);
+    if (STATUS_SUCCESS != retval)
+    {
+        /* the caller maintains ownership of lhs. */
+        tmp->value.binary.lhs = NULL;
+        goto cleanup_tmp;
+    }
+
+    /* success. */
+    goto done;
+
+cleanup_tmp:
+    release_retval = resource_release(&tmp->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+cleanup_rhs:
+    release_retval = resource_release(&rhs->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Attempt to parse an expression from a biconditional operator and a
+ * left-hand-side expression.
+ *
+ * \param node          Pointer to the node pointer to receive this expression
+ *                      on success.
+ * \param context       The context for this operation.
+ * \param lhs           The left-hand-side expression for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_expression_from_biconditional(
+    libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs)
+{
+    status retval, release_retval;
+    libsat_ast_node* tmp;
+    libsat_ast_node* rhs;
+
+    /* parse the next expression. */
+    retval =
+        parse_expression(
+            &rhs, context, LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* fold this right-hand-side into the more tightly binding operation. */
+    if (
+        next_operation_binds_tighter(
+            context, LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL))
+    {
+        /* fold this next expression into this operation. */
+        retval = parse_operation(&rhs, context, rhs);
+        if (STATUS_SUCCESS != retval)
+        {
+            goto cleanup_rhs;
+        }
+    }
+
+    /* create the biconditional. */
+    retval =
+        libsat_ast_node_create_as_biconditional(
+            &tmp, context->context, lhs, rhs);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_rhs;
+    }
+
+    /* fold this biconditional into the next operation. */
     retval = parse_operation(node, context, tmp);
     if (STATUS_SUCCESS != retval)
     {
