@@ -48,6 +48,10 @@ static status parse_statement_from_variable(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_variable(
     libsat_ast_node** node, parser_context* context, int left_operator);
+static status parse_statement_from_literal(
+    libsat_ast_node** node, parser_context* context);
+static status parse_expression_from_literal(
+    libsat_ast_node** node, parser_context* context, int left_operator);
 static status parse_statement_from_negation(
     libsat_ast_node** node, parser_context* context);
 static status parse_expression_from_negation(
@@ -198,6 +202,10 @@ static status parse_statement(libsat_ast_node** node, parser_context* context)
             retval = parse_statement_from_variable(&tmp, context);
             break;
 
+        case LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE:
+            retval = parse_statement_from_literal(&tmp, context);
+            break;
+
         case LIBSAT_SCANNER_TOKEN_TYPE_NEGATION:
             retval = parse_statement_from_negation(&tmp, context);
             break;
@@ -308,6 +316,11 @@ static status parse_expression(
         case LIBSAT_SCANNER_TOKEN_TYPE_VARIABLE:
             retval =
                 parse_expression_from_variable(&tmp, context, left_operator);
+            break;
+
+        case LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE:
+            retval =
+                parse_expression_from_literal(&tmp, context, left_operator);
             break;
 
         case LIBSAT_SCANNER_TOKEN_TYPE_NEGATION:
@@ -636,6 +649,123 @@ static status parse_expression_from_variable(
 
     /* shift this variable. */
     retval = create_variable(&tmp, context);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* is the next operator tighter binding than the previous one? */
+    if (next_operation_binds_tighter(context, left_operator))
+    {
+        /* fold this variable into the next operation. */
+        retval = parse_operation(node, context, tmp);
+        if (STATUS_SUCCESS != retval)
+        {
+            goto cleanup_tmp;
+        }
+    }
+    else
+    {
+        *node = tmp;
+    }
+
+    /* success. */
+    goto done;
+
+cleanup_tmp:
+    release_retval = resource_release(&tmp->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Parse a statement starting with a literal.
+ *
+ * \param node              The pointer to the node pointer to store this node
+ *                          on success.
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_statement_from_literal(
+    libsat_ast_node** node, parser_context* context)
+{
+    status retval, release_retval;
+    libsat_ast_node* expr;
+    libsat_ast_node* stmt;
+
+    /* parse an expression from this literal. */
+    retval =
+        parse_expression_from_literal(
+            &expr, context, LIBSAT_SCANNER_TOKEN_TYPE_NOP);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* create a statement from this expression. */
+    retval = libsat_ast_node_create_as_statement(&stmt, context->context, expr);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_expr;
+    }
+
+    /* success. */
+    *node = stmt;
+    retval = STATUS_SUCCESS;
+    goto done;
+
+cleanup_expr:
+    release_retval = resource_release(&expr->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Parse an expression starting with a boolean literal.
+ *
+ * \param node              Pointer to the node pointer to store the parsed node
+ *                          on success.
+ * \param context           The parser context for this operation.
+ * \param left_operator     The left-hand-side operator for lookahead.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_expression_from_literal(
+    libsat_ast_node** node, parser_context* context, int left_operator)
+{
+    status retval, release_retval;
+    libsat_ast_node* tmp;
+    bool value;
+
+    /* decode the value. */
+    if (LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE == context->details.type)
+    {
+        value = true;
+    }
+    else
+    {
+        value = false;
+    }
+
+    /* create the AST node. */
+    retval =
+        libsat_ast_node_create_from_boolean_literal(
+            &tmp, context->context, value);
     if (STATUS_SUCCESS != retval)
     {
         goto done;
