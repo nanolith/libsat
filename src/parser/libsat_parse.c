@@ -202,6 +202,7 @@ static status parse_statement(libsat_ast_node** node, parser_context* context)
             retval = parse_statement_from_variable(&tmp, context);
             break;
 
+        case LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_FALSE:
         case LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE:
             retval = parse_statement_from_literal(&tmp, context);
             break;
@@ -318,6 +319,7 @@ static status parse_expression(
                 parse_expression_from_variable(&tmp, context, left_operator);
             break;
 
+        case LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_FALSE:
         case LIBSAT_SCANNER_TOKEN_TYPE_LITERAL_TRUE:
             retval =
                 parse_expression_from_literal(&tmp, context, left_operator);
