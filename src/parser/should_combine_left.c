@@ -106,6 +106,9 @@ static int get_priority(int token)
         case LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL:
             return LIBSAT_OPERATOR_PRIORITY_BICONDITIONAL;
 
+        case LIBSAT_SCANNER_TOKEN_TYPE_CLOSE_PAREN:
+            return LIBSAT_OPERATOR_PRIORITY_CLOSE_PAREN;
+
         default:
             /* TODO - this should trigger an assertion failure. */
             return 100;
