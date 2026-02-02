@@ -1177,3 +1177,63 @@ TEST(simple_false_literal)
     TEST_ASSERT(
         STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
 }
+
+/**
+ * Parse an implication with two literals.
+ */
+TEST(implication_with_two_literals1)
+{
+    allocator* alloc;
+    libsat_context* context;
+    libsat_ast_node* base = nullptr;
+    libsat_ast_node* node = nullptr;
+    libsat_ast_node* implication = nullptr;
+    const char* input = R"(true → false)";
+
+    /* create malloc allocator. */
+    TEST_ASSERT(STATUS_SUCCESS == malloc_allocator_create(&alloc));
+
+    /* create context. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_context_create(&context, alloc));
+
+    /* Parse should succeed. */
+    TEST_ASSERT(STATUS_SUCCESS == libsat_parse(&base, context, input));
+
+    /* the node should not be NULL and should be a statement list. */
+    node = base;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT_LIST == node->type);
+    TEST_ASSERT(NULL != node->value.list.head);
+
+    /* the node should not be NULL and should be a statement. */
+    node = node->value.list.head;
+    TEST_ASSERT(nullptr != node);
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_STATEMENT == node->type);
+    TEST_ASSERT(NULL != node->value.unary);
+
+    /* The statement child node should be an implication. */
+    implication = node->value.unary;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_IMPLICATION == implication->type);
+    TEST_ASSERT(NULL != implication->value.binary.lhs);
+    TEST_ASSERT(NULL != implication->value.binary.rhs);
+
+    /* The left-hand side of the implication should be a true literal. */
+    node = implication->value.binary.lhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_BOOLEAN_LITERAL == node->type);
+    TEST_EXPECT(true == node->value.boolean_literal);
+
+    /* The right-hand side of the implication should be a false literal. */
+    node = implication->value.binary.rhs;
+    TEST_ASSERT(LIBSAT_PARSER_AST_NODE_TYPE_BOOLEAN_LITERAL == node->type);
+    TEST_EXPECT(false == node->value.boolean_literal);
+
+    /* clean up. */
+    TEST_ASSERT(
+        STATUS_SUCCESS
+            == resource_release(libsat_ast_node_resource_handle(base)));
+    TEST_ASSERT(
+        STATUS_SUCCESS ==
+            resource_release(libsat_context_resource_handle(context)));
+    TEST_ASSERT(
+        STATUS_SUCCESS == resource_release(allocator_resource_handle(alloc)));
+}
