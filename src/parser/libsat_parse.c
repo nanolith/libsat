@@ -29,6 +29,7 @@ typedef struct parser_context
     libsat_scanner* scanner;
     libsat_context* context;
     const char* input;
+    int depth;
 } parser_context;
 
 static bool token_is_binary_operator(int token);
@@ -36,6 +37,8 @@ static bool next_operation_binds_tighter(parser_context* context, int token);
 static status parse_statement(libsat_ast_node** node, parser_context* context);
 static status parse_expression(
     libsat_ast_node** node, parser_context* context, int left_operator);
+static status parse_parenthetical_expression(
+    libsat_ast_node** node, parser_context* context);
 static status parse_operation(
     libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 static status create_variable(libsat_ast_node** node, parser_context* context);
@@ -302,6 +305,10 @@ static status parse_expression(
                 parse_expression_from_negation(&tmp, context, left_operator);
             break;
 
+        case LIBSAT_SCANNER_TOKEN_TYPE_OPEN_PAREN:
+            retval = parse_parenthetical_expression(&tmp, context);
+            break;
+
         default:
             retval = ERROR_LIBSAT_PARSER_UNEXPECTED_TOKEN;
             break;
@@ -345,6 +352,19 @@ static status parse_operation(
 
     switch (next_token)
     {
+        case LIBSAT_SCANNER_TOKEN_TYPE_CLOSE_PAREN:
+            if (context->depth <= 0)
+            {
+                retval = ERROR_LIBSAT_PARSER_UNBALANCED_PARETHESES;
+            }
+            else
+            {
+                context->depth -= 1;
+                *node = lhs;
+                retval = STATUS_SUCCESS;
+            }
+            break;
+
         case LIBSAT_SCANNER_TOKEN_TYPE_SEMICOLON:
         case LIBSAT_SCANNER_TOKEN_TYPE_EOF:
             /* the left-hand side expression ends this scan. */
@@ -469,6 +489,58 @@ static status parse_statement_from_variable(
 
 cleanup_expr:
     release_retval = resource_release(&expr->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
+ * \brief Parse a parenthetical expression.
+ *
+ * \param node              Pointer to the node pointer to hold this expression
+ *                          node on success.
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_parenthetical_expression(
+    libsat_ast_node** node, parser_context* context)
+{
+    status retval, release_retval;
+    int old_depth;
+    libsat_ast_node* tmp;
+
+    /* increment the expression depth. */
+    old_depth = context->depth;
+    context->depth += 1;
+
+    /* parse an expression. */
+    retval = parse_expression(&tmp, context, LIBSAT_SCANNER_TOKEN_TYPE_NOP);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* the expression should have ended with a close parenthesis. */
+    if (old_depth != context->depth)
+    {
+        retval = ERROR_LIBSAT_PARSER_UNBALANCED_PARETHESES;
+        goto cleanup_tmp;
+    }
+
+    /* success. */
+    *node = tmp;
+    retval = STATUS_SUCCESS;
+    goto done;
+
+cleanup_tmp:
+    release_retval = resource_release(&tmp->hdr);
     if (STATUS_SUCCESS != release_retval)
     {
         retval = release_retval;
