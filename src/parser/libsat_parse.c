@@ -39,6 +39,8 @@ static status parse_expression(
     libsat_ast_node** node, parser_context* context, int left_operator);
 static status parse_parenthetical_expression(
     libsat_ast_node** node, parser_context* context);
+static status parse_parenthetical_statement(
+    libsat_ast_node** node, parser_context* context);
 static status parse_operation(
     libsat_ast_node** node, parser_context* context, libsat_ast_node* lhs);
 static status create_variable(libsat_ast_node** node, parser_context* context);
@@ -200,6 +202,10 @@ static status parse_statement(libsat_ast_node** node, parser_context* context)
             retval = parse_statement_from_negation(&tmp, context);
             break;
 
+        case LIBSAT_SCANNER_TOKEN_TYPE_OPEN_PAREN:
+            retval = parse_parenthetical_statement(&tmp, context);
+            break;
+
         case LIBSAT_SCANNER_TOKEN_TYPE_SEMICOLON:
             retval = parse_statement(&tmp, context);
             break;
@@ -240,6 +246,10 @@ static bool token_is_binary_operator(int token)
         case LIBSAT_SCANNER_TOKEN_TYPE_DISJUNCTION:
         case LIBSAT_SCANNER_TOKEN_TYPE_IMPLICATION:
         case LIBSAT_SCANNER_TOKEN_TYPE_BICONDITIONAL:
+            return true;
+
+        /* we also consider close_paren a binary operator in this case. */
+        case LIBSAT_SCANNER_TOKEN_TYPE_CLOSE_PAREN:
             return true;
 
         default:
@@ -499,6 +509,52 @@ done:
 }
 
 /**
+ * \brief Parse a parenthetical statement.
+ *
+ * \param context           The parser context for this operation.
+ *
+ * \returns a status code indicating success or failure.
+ *      - STATUS_SUCCESS on success.
+ *      - a non-zero error code on failure.
+ */
+static status parse_parenthetical_statement(
+    libsat_ast_node** node, parser_context* context)
+{
+    status retval, release_retval;
+    libsat_ast_node* expr;
+    libsat_ast_node* stmt;
+
+    /* parse a parenthetical expression. */
+    retval = parse_parenthetical_expression(&expr, context);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto done;
+    }
+
+    /* create a statement from this expression. */
+    retval = libsat_ast_node_create_as_statement(&stmt, context->context, expr);
+    if (STATUS_SUCCESS != retval)
+    {
+        goto cleanup_expr;
+    }
+
+    /* success. */
+    *node = stmt;
+    retval = STATUS_SUCCESS;
+    goto done;
+
+cleanup_expr:
+    release_retval = resource_release(&expr->hdr);
+    if (STATUS_SUCCESS != release_retval)
+    {
+        retval = release_retval;
+    }
+
+done:
+    return retval;
+}
+
+/**
  * \brief Parse a parenthetical expression.
  *
  * \param node              Pointer to the node pointer to hold this expression
@@ -525,6 +581,16 @@ static status parse_parenthetical_expression(
     if (STATUS_SUCCESS != retval)
     {
         goto done;
+    }
+
+    /* fold this expression into an optional operation. */
+    if (old_depth != context->depth)
+    {
+        retval = parse_operation(&tmp, context, tmp);
+        if (STATUS_SUCCESS != retval)
+        {
+            goto cleanup_tmp;
+        }
     }
 
     /* the expression should have ended with a close parenthesis. */
